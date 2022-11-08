@@ -13,6 +13,14 @@
         android:theme="@style/Theme.StudentApp"
         tools:targetApi="31">
         <activity
+            android:name=".UIController.CourseListAdapter"
+            android:exported="false"
+            android:parentActivityName=".UIController.TermDetailsActivity">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".UIController.TermDetailsActivity"
             android:exported="false"
             android:label="Term Details"

@@ -26,6 +26,7 @@
         android:layout_height="45dp"
         android:layout_marginTop="8dp"
         android:maxLines="1"
+        android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.268"
@@ -36,7 +37,7 @@
         android:id="@+id/startDateLabel"
         android:layout_width="189dp"
         android:layout_height="34dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:text="Start date:"
         android:textAlignment="viewStart"
         android:textColor="#01579B"
@@ -52,6 +53,7 @@
         android:layout_height="45dp"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.267"
@@ -62,7 +64,7 @@
         android:id="@+id/endDateLabel"
         android:layout_width="189dp"
         android:layout_height="34dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:text="End date:"
         android:textAlignment="viewStart"
         android:textColor="#01579B"
@@ -78,10 +80,23 @@
         android:layout_height="45dp"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.267"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/endDateLabel" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="213dp"
+        android:layout_height="59dp"
+        android:text="Show course(s)"
+        android:onClick="onShowCourseButtonClick"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endDateDetails"
+        app:layout_constraintVertical_bias="0.188" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

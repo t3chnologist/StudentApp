@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,5 +87,10 @@ public class TermDetailsActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_TERM) {
             Toast.makeText(this, "Term updated", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void onShowCourseButtonClick(View view) {
+        Intent intent = new Intent(TermDetailsActivity.this, CourseListAdapter.class);
+        startActivity(intent);
     }
 }

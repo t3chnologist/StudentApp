@@ -145,9 +145,9 @@ public class TermListAdapter extends AppCompatActivity {
             mTextView.setText(term.getTermTitle());
 
             if (mSelectedTermPosition == position) {
-                mTextView.setBackgroundColor(Color.RED);
+                mTextView.setBackgroundColor(Color.BLUE);
             } else {
-                int colorIndex = new Random().nextInt(8);
+                int colorIndex = term.getTermTitle().length() % mTermColors.length;
                 mTextView.setBackgroundColor(mTermColors[colorIndex]);
             }
         }
