@@ -11,4 +11,6 @@
     <string name="enter">ENTER</string>
     <string name="welcome_message_bottom">Glad you\'re here!</string>
     <string name="welcome_message_top">Welcome to the Student App</string>
+    <string name="no_terms_to_display">No terms to display.</string>
+    <string name="term_title">Term title:</string>
 </resources>

@@ -32,6 +32,9 @@ public class TermListAdapter extends AppCompatActivity {
     private Term mSelectedTerm;
     private int mSelectedTermPosition = RecyclerView.NO_POSITION;
     private ActionMode mActionMode = null;
+    private ViewGroup mShowTermsLayout;
+    private ViewGroup mNoTermsLayout;
+    private List<Term> mTermList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +48,43 @@ public class TermListAdapter extends AppCompatActivity {
                 new GridLayoutManager(getApplicationContext(), 1);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mStudentDb = StudentDatabase.getInstance(getApplicationContext());
+        mNoTermsLayout = findViewById(R.id.noTermsLayout);
+        mShowTermsLayout = findViewById(R.id.showTermsLayout);
+        mTermList = mStudentDb.termDao().getTerms();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        mTermList = mStudentDb.termDao().getTerms();
+        if (mTermList.size() == 0) {
+            displayTerm(false);
+        }
+        else {
+            displayTerm(true);
+        }
         mTermAdapter = new TermAdapter(mStudentDb.termDao().getTerms());
         mRecyclerView.setAdapter(mTermAdapter);
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mTermList.size() == 0) {
+            displayTerm(false);
+        }
+        else {
+            displayTerm(true);
+        }
+    }
+
+    private void displayTerm(boolean display) {
+        if (display) {
+            mShowTermsLayout.setVisibility(View.VISIBLE);
+            mNoTermsLayout.setVisibility(View.GONE);
+        } else {
+            mShowTermsLayout.setVisibility(View.GONE);
+            mNoTermsLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private class TermAdapter extends RecyclerView.Adapter<TermHolder>{
@@ -201,4 +234,5 @@ public class TermListAdapter extends AppCompatActivity {
             Toast.makeText(this, "Term deleted", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
