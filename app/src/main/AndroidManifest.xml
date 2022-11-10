@@ -13,8 +13,25 @@
         android:theme="@style/Theme.StudentApp"
         tools:targetApi="31">
         <activity
+            android:name=".UIController.CourseEditActivity"
+            android:exported="false"
+            android:label="Edit Course">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".UIController.CourseDetailsActivity"
+            android:exported="false"
+            android:label="Course details">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".UIController.CourseListAdapter"
             android:exported="false"
+            android:label="Course List"
             android:parentActivityName=".UIController.TermDetailsActivity">
             <meta-data
                 android:name="android.app.lib_name"
@@ -42,7 +59,7 @@
         <activity
             android:name=".UIController.TermEditActivity"
             android:exported="false"
-            android:label="Add/Edit Term"
+            android:label="Edit Term"
             android:parentActivityName=".UIController.TermListAdapter"
             android:windowSoftInputMode="adjustResize">
             <meta-data

@@ -161,7 +161,7 @@ public class TermListAdapter extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(TermListAdapter.this, TermDetailsActivity.class);
-            intent.putExtra(TermEditActivity.EXTRA_TERM_ID, mTerm.getId());
+            intent.putExtra(TermDetailsActivity.EXTRA_TERM_ID, mTerm.getId());
             startActivity(intent);
         }
 

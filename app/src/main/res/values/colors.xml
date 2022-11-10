@@ -19,4 +19,17 @@
         <item>#8E7AB3</item>
         <item>#C597A6</item>
     </array>
+
+    <array name="courseColors">
+        <item>#777CAF</item>
+        <item>#539BA5</item>
+        <item>#89B68B</item>
+        <item>#BCA585</item>
+        <item>#97827B</item>
+        <item>#6C9894</item>
+        <item>#877986</item>
+        <item>#968FA5</item>
+        <item>#BFABB2</item>
+    </array>
+
 </resources>
