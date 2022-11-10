@@ -1,9 +1,11 @@
 package C196PA.BTerbish.StudentApp.UIController;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
@@ -25,6 +27,11 @@ public class TermEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_edit);
+
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         mStudentDb = StudentDatabase.getInstance(getApplicationContext());
         mTermTitle = findViewById(R.id.termTitleText);
         mStartDate = findViewById(R.id.startDateText);
@@ -33,7 +40,7 @@ public class TermEditActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mTermId = intent.getLongExtra(EXTRA_TERM_ID, -1);
 
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
 
         if (mTermId == -1) {
             mTerm = new Term();
@@ -71,4 +78,14 @@ public class TermEditActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
