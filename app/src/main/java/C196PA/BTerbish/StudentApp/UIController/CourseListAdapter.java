@@ -28,6 +28,8 @@ import C196PA.BTerbish.StudentApp.R;
 
 public class CourseListAdapter extends AppCompatActivity {
     public static final String EXTRA_COURSE_ID = "C196PA.BTerbish.StudentApp.Entity.Course";
+    public static final String EXTRA_TERM_ID = "C196PA.BTerbish.StudentApp.Entity.Term";
+
     StudentDatabase mStudentDb;
     private CourseAdapter mCourseAdapter;
     private RecyclerView mRecyclerView;
@@ -38,7 +40,7 @@ public class CourseListAdapter extends AppCompatActivity {
     private ViewGroup mShowCoursesLayout;
     private ViewGroup mNoCourseLayout;
     private List<Course> mCourseList;
-
+    private long mTermId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,8 @@ public class CourseListAdapter extends AppCompatActivity {
         mNoCourseLayout = findViewById(R.id.noCourseLayout);
         mShowCoursesLayout = findViewById(R.id.showCoursesLayout);
         mCourseList = mStudentDb.courseDao().getCourses();
+        Intent intent = getIntent();
+        mTermId = intent.getLongExtra(EXTRA_TERM_ID, -1);
     }
 
     @Override
@@ -193,6 +197,7 @@ public class CourseListAdapter extends AppCompatActivity {
     }
     public void onCourseAddClick(View view) {
         Intent intent = new Intent(CourseListAdapter.this, CourseEditActivity.class);
+        intent.putExtra(EXTRA_TERM_ID, mTermId);
         startActivity(intent);
     }
 

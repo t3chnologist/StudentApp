@@ -50,8 +50,7 @@
             android:name=".UIController.TermListAdapter"
             android:exported="false"
             android:label="Term List"
-            android:launchMode="singleTop"
-            android:parentActivityName=".UIController.HomeScreenActivity">
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

@@ -15,7 +15,7 @@ public interface CourseDao {
     List<Course> getCourses();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertCourse(Course course);
+    long insertCourse(Course course);
 
     @Update
     void updateCourse(Course course);

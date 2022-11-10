@@ -43,10 +43,6 @@ public class TermListAdapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acvitity_term_list_adapter);
 
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
         mStudentDb = StudentDatabase.getInstance(getApplicationContext());
         mTermColors = getResources().getIntArray(R.array.termColors);
         mRecyclerView = findViewById(R.id.termRecyclerView);
@@ -239,14 +235,5 @@ public class TermListAdapter extends AppCompatActivity {
         else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_DELETE_TERM) {
             Toast.makeText(this, "Term deleted", Toast.LENGTH_SHORT).show();
         }
-    }
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

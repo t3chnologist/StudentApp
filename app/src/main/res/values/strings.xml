@@ -13,4 +13,12 @@
     <string name="welcome_message_top">Welcome to the Student App</string>
     <string name="no_terms_to_display">No terms to display.</string>
     <string name="term_title">Term title:</string>
+
+    <string-array name="course_status_array">
+        <item>Select course status</item>
+        <item>In progress</item>
+        <item>Completed</item>
+        <item>Dropped</item>
+        <item>Plan to take</item>
+    </string-array>
 </resources>

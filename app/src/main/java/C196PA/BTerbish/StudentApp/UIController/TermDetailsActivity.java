@@ -42,7 +42,7 @@ public class TermDetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mTermId = intent.getLongExtra(EXTRA_TERM_ID, -1);
-        mTerm = mStudentDb.termDao().getTerm(mTermId);
+        mTerm = mStudentDb.termDao().getTermId(mTermId);
 
         String termTitle = mTerm.getTermTitle();
         setTitle("\"" + termTitle + "\" details");
@@ -54,7 +54,7 @@ public class TermDetailsActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         //refreshing the details
-        mTerm = mStudentDb.termDao().getTerm(mTermId);
+        mTerm = mStudentDb.termDao().getTermId(mTermId);
         String termTitle = mTerm.getTermTitle();
         setTitle("\"" + termTitle + "\" details");
         mTermTitleDetail.setText(termTitle);
@@ -99,6 +99,7 @@ public class TermDetailsActivity extends AppCompatActivity {
 
     public void onShowCourseButtonClick(View view) {
         Intent intent = new Intent(TermDetailsActivity.this, CourseListAdapter.class);
+        intent.putExtra(EXTRA_TERM_ID, mTermId);
         startActivity(intent);
     }
 }

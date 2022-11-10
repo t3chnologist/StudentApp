@@ -49,7 +49,7 @@ public class TermEditActivity extends AppCompatActivity {
             }
         }
         else {
-            mTerm = mStudentDb.termDao().getTerm(mTermId);
+            mTerm = mStudentDb.termDao().getTermId(mTermId);
             mTermTitle.setText(mTerm.getTermTitle());
 
             mStartDate.setText(mTerm.getStartDate());
@@ -78,6 +78,7 @@ public class TermEditActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

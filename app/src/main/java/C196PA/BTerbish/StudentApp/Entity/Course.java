@@ -38,7 +38,7 @@ public class Course {
     private String mInstructorEmail;
 
     @ColumnInfo(name = "term")
-    private String mTerm;
+    private long mTerm;
 
     @ColumnInfo(name = "lastUpdated")
     private long mLastUpdated;
@@ -115,11 +115,11 @@ public class Course {
         this.mInstructorEmail = mInstructorEmail;
     }
 
-    public String getTerm() {
+    public long getTerm() {
         return mTerm;
     }
 
-    public void setTerm(String mTerm) {
+    public void setTerm(long mTerm) {
         this.mTerm = mTerm;
     }
 
