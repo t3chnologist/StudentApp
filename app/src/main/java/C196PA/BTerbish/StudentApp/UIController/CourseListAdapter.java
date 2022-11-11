@@ -230,7 +230,7 @@ public class CourseListAdapter extends AppCompatActivity {
                     bundle.putLong("courseId", mSelectedCourse.getId());
                     Intent intent = new Intent(CourseListAdapter.this, CourseEditActivity.class);
                     intent.putExtras(bundle);
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_DELETE_COURSE);
                 default:
                     return false;
             }

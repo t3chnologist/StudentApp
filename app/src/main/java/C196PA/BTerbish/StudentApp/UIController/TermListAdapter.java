@@ -1,7 +1,10 @@
 package C196PA.BTerbish.StudentApp.UIController;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -141,7 +144,9 @@ public class TermListAdapter extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(TermListAdapter.this, TermDetailsActivity.class);
-            intent.putExtra(TermDetailsActivity.EXTRA_TERM_ID, mTerm.getId());
+            Bundle bundle = new Bundle();
+            bundle.putLong("termId", mTerm.getId());
+            intent.putExtras(bundle);
             startActivity(intent);
         }
 
@@ -162,7 +167,10 @@ public class TermListAdapter extends AppCompatActivity {
     }
 
     public void onTermAddClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("termId", -1);
         Intent intent = new Intent(TermListAdapter.this, TermEditActivity.class);
+        intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_NEW_TERM);
     }
 
@@ -199,8 +207,10 @@ public class TermListAdapter extends AppCompatActivity {
 
                 case R.id.edit:
                     mode.finish();
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("termId", mSelectedTerm.getId());
                     Intent intent = new Intent(TermListAdapter.this, TermEditActivity.class);
-                    intent.putExtra(TermEditActivity.EXTRA_TERM_ID, mSelectedTerm.getId());
+                    intent.putExtras(bundle);
                     startActivityForResult(intent, REQUEST_CODE_UPDATE_TERM);
                 default:
                     return false;
@@ -220,6 +230,24 @@ public class TermListAdapter extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_NEW_TERM) {
             Toast.makeText(this, "Term added", Toast.LENGTH_SHORT).show();
+
+            Bundle bundle = data.getExtras();
+            long newTermId = bundle.getLong("termId");
+            String newTermTitle = mStudentDb.termDao().getTermById(newTermId).getTermTitle();
+            new AlertDialog.Builder(this)
+                    .setTitle("Successfully added term \"" + newTermTitle + "\"")
+                    .setMessage("Would you like to add course to this term?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            Bundle bundle = new Bundle();
+                            bundle.putLong("courseId", -1);
+                            bundle.putLong("termId", newTermId);
+                            Intent intent = new Intent(TermListAdapter.this,
+                                                            CourseEditActivity.class);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }})
+                    .setNegativeButton("No", null).show();
         }
         else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_TERM) {
             Toast.makeText(this, "Term updated", Toast.LENGTH_SHORT).show();

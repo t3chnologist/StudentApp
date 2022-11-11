@@ -16,7 +16,7 @@ import C196PA.BTerbish.StudentApp.R;
 
 public class TermEditActivity extends AppCompatActivity {
 
-    public static final String EXTRA_TERM_ID = "C196PA.BTerbish.StudentApp.Entity.term";
+
     private StudentDatabase mStudentDb;
     private EditText mTermTitle;
     private EditText mStartDate;
@@ -29,7 +29,6 @@ public class TermEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_edit);
-
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -39,8 +38,8 @@ public class TermEditActivity extends AppCompatActivity {
         mStartDate = findViewById(R.id.startDateText);
         mEndDate = findViewById(R.id.endDateText);
 
-        Intent intent = getIntent();
-        mTermId = intent.getLongExtra(EXTRA_TERM_ID, -1);
+        Bundle bundle = getIntent().getExtras();
+        mTermId = bundle.getLong("termId");
 
         actionBar = getSupportActionBar();
 
@@ -91,8 +90,10 @@ public class TermEditActivity extends AppCompatActivity {
         Intent intent = new Intent();
 
         if (mTermId == -1) {
-            long termId = mStudentDb.termDao().insertTerm(mTerm);
-            intent.putExtra(EXTRA_TERM_ID, termId);
+            long newTermId = mStudentDb.termDao().insertTerm(mTerm);
+            Bundle bundle = new Bundle();
+            bundle.putLong("termId", newTermId);
+            intent.putExtras(bundle);
         }
         else {
             mStudentDb.termDao().updateTerm(mTerm);

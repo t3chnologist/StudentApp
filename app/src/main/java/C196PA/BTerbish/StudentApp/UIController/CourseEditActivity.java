@@ -121,10 +121,11 @@ public class CourseEditActivity extends AppCompatActivity {
 
         if (mCourseId == -1) {
             mStudentDb.courseDao().insertCourse(mCourse);
+
         }
         else {
             mStudentDb.courseDao().updateCourse(mCourse);
-            intent = new Intent(this, CourseListAdapter.class);
+            intent = new Intent(this, CourseDetailsActivity.class);
         }
         setResult(RESULT_OK, intent);
         finish();

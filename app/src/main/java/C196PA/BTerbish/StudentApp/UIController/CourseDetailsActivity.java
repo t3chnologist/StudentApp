@@ -1,9 +1,15 @@
 package C196PA.BTerbish.StudentApp.UIController;
 
+import static android.app.PendingIntent.getActivity;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,11 +18,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Course;
 import C196PA.BTerbish.StudentApp.R;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+
+import java.util.Objects;
 
 public class CourseDetailsActivity extends AppCompatActivity {
 
@@ -103,21 +111,31 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE_UPDATE_COURSE);
                 return true;
             case R.id.delete:
-                mStudentDb.courseDao().deleteCourse(mCourse);
-                bundle = new Bundle();
-                bundle.putLong("termId", mTermId);
-                intent = new Intent(CourseDetailsActivity.this, CourseListAdapter.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                new AlertDialog.Builder(this)
+                        .setTitle("Course: " + mCourseTitle.getText())
+                        .setMessage("Are you sure you want to delete this course?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                mStudentDb.courseDao().deleteCourse(mCourse);
+                                Bundle bundle = new Bundle();
+                                bundle.putLong("termId", mTermId);
+                                Intent intent = new Intent(CourseDetailsActivity.this,
+                                                            CourseListAdapter.class);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }})
+                        .setNegativeButton("No", null).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_COURSE) {
-            Toast.makeText(this, "Term updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Course updated", Toast.LENGTH_SHORT).show();
+
         }
     }
 }

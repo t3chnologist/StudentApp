@@ -91,11 +91,23 @@
         app:layout_constraintTop_toBottomOf="@+id/endDateLabel" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/showCourseButtonId"
         android:layout_width="213dp"
         android:layout_height="59dp"
         android:onClick="onShowCourseButtonClick"
         android:text="Show course(s)"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endDateDetails"
+        app:layout_constraintVertical_bias="0.188" />
+
+    <Button
+        android:id="@+id/addCourseButtonId"
+        android:layout_width="213dp"
+        android:layout_height="59dp"
+        android:onClick="onAddCourseButtonClick"
+        android:text="Add Course"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

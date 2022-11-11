@@ -3,6 +3,8 @@ package C196PA.BTerbish.StudentApp.UIController;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +22,6 @@ import C196PA.BTerbish.StudentApp.R;
 
 public class TermDetailsActivity extends AppCompatActivity {
 
-    public static final String EXTRA_TERM_ID = "C196PA.BTerbish.StudentApp.Entity.term";
     private final int REQUEST_CODE_UPDATE_TERM = 1;
     long mTermId;
     Term mTerm;
@@ -27,6 +29,8 @@ public class TermDetailsActivity extends AppCompatActivity {
     private TextView mTermTitleDetail;
     private TextView mStartDateDetail;
     private TextView mEndDateDetail;
+    private Button showCourseButton;
+    private Button addCourseButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,12 @@ public class TermDetailsActivity extends AppCompatActivity {
         mTermTitleDetail = findViewById(R.id.termTitleDetails);
         mStartDateDetail = findViewById(R.id.startDateDetails);
         mEndDateDetail = findViewById(R.id.endDateDetails);
-        mTermId = getIntent().getLongExtra(EXTRA_TERM_ID, -1);
+
+        Bundle bundle = getIntent().getExtras();
+        mTermId = bundle.getLong("termId");
+
+        showCourseButton = findViewById(R.id.showCourseButtonId);
+        addCourseButton = findViewById(R.id.addCourseButtonId);
 
         refresh();
     }
@@ -59,6 +68,16 @@ public class TermDetailsActivity extends AppCompatActivity {
         mTermTitleDetail.setText(termTitle);
         mStartDateDetail.setText(mTerm.getStartDate());
         mEndDateDetail.setText(mTerm.getEndDate());
+
+        if (mStudentDb.courseDao().getCoursesByTermId(mTermId).size() > 0) {
+            showCourseButton.setVisibility(View.VISIBLE);
+            addCourseButton.setVisibility(View.GONE);
+        }
+        else {
+            showCourseButton.setVisibility(View.GONE);
+            addCourseButton.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
@@ -74,20 +93,39 @@ public class TermDetailsActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.edit:
+                Bundle bundle = new Bundle();
+                bundle.putLong("termId", mTermId);
                 Intent intent = new Intent(this, TermEditActivity.class);
-                intent.putExtra(TermEditActivity.EXTRA_TERM_ID, mTermId);
+                intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_CODE_UPDATE_TERM);
                 return true;
             case R.id.delete:
+                //check if term has course associated
                 if (mStudentDb.courseDao().getCoursesByTermId(mTermId).size() > 0) {
-                    Toast.makeText(TermDetailsActivity.this,
-                            "Term cannot be deleted. Remove associated courses first.",
-                            Toast.LENGTH_LONG).show();
+                    new AlertDialog.Builder(this)
+                            .setTitle("Warning")
+                            .setMessage("This term cannot be deleted.\n" +
+                                        "Remove associated course(s) first.")
+                            .setPositiveButton("OK", null)
+                            .setNeutralButton("Show course(s)",
+                                                        new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    showAssociatedCourses();
+                                }
+                            }).show();
                 }
                 else {
-                    mStudentDb.termDao().deleteTerm(mTerm);
-                    intent = new Intent(this, TermListAdapter.class);
-                    startActivity(intent);
+                    new AlertDialog.Builder(this)
+                            .setTitle("Term: " + mTermTitleDetail.getText())
+                            .setMessage("Are you sure you want to delete this term?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    mStudentDb.termDao().deleteTerm(mTerm);
+                                    Intent intent = new Intent(TermDetailsActivity.this,
+                                                                    TermListAdapter.class);
+                                    startActivity(intent);
+                                }})
+                            .setNegativeButton("No", null).show();
                     return true;
                 }
 
@@ -104,7 +142,21 @@ public class TermDetailsActivity extends AppCompatActivity {
         }
     }
 
+
+    public void onAddCourseButtonClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("courseId", -1);
+        bundle.putLong("termId", mTermId);
+        Intent intent = new Intent(this, CourseEditActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
     public void onShowCourseButtonClick(View view) {
+        showAssociatedCourses();
+    }
+
+    public void showAssociatedCourses() {
         Bundle bundle = new Bundle();
         bundle.putLong("termId", mTermId);
         Intent intent = new Intent(TermDetailsActivity.this, CourseListAdapter.class);
