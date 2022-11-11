@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,9 +20,6 @@ import C196PA.BTerbish.StudentApp.R;
 
 public class CourseEditActivity extends AppCompatActivity {
 
-    public static final String EXTRA_COURSE_ID = "C196PA.BTerbish.StudentApp.Entity.Course";
-    public static final String EXTRA_TERM_ID = "C196PA.BTerbish.StudentApp.Entity.Term";
-
     private StudentDatabase mStudentDb;
     private EditText mCourseTitle;
     private EditText mStartDate;
@@ -29,8 +28,10 @@ public class CourseEditActivity extends AppCompatActivity {
     private EditText mInstructorName;
     private EditText mInstructorPhone;
     private EditText mInstructorEmail;
+    private EditText mOptionalNote;
     private long mTermId;
     private long mCourseId;
+    private Course mCourse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,22 +57,46 @@ public class CourseEditActivity extends AppCompatActivity {
         mInstructorName = findViewById(R.id.instructorNameText);
         mInstructorPhone = findViewById(R.id.instructorPhoneText);
         mInstructorEmail = findViewById(R.id.instructorEmailText);
+        mOptionalNote = findViewById(R.id.courseNoteOptionalText);
 
-        Intent intent = getIntent();
-        mTermId = intent.getLongExtra(EXTRA_TERM_ID, -1);
-        mCourseId = intent.getLongExtra(EXTRA_COURSE_ID, -1);
+        Bundle bundle = getIntent().getExtras();
+        mCourseId = bundle.getLong("courseId");
+        mTermId = bundle.getLong("termId");
 
+        StudentDatabase mStudentDb = StudentDatabase.getInstance(getApplicationContext());
+
+        if (mCourseId == -1) {
+            setTitle("Add course");
+        }
+        else {
+            setTitle("Edit course");
+        }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.edit_new_menu, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.finish();
                 return true;
+            case R.id.save:
+                saveCourse();
         }
         return super.onOptionsItemSelected(item);
     }
+
     public void onSaveCourseButtonClick(View view) {
+        saveCourse();
+    }
+
+    public void saveCourse() {
         Course mCourse = new Course();
         mCourse.setCourseTitle(mCourseTitle.getText().toString());
         mCourse.setCourseStartDate(mStartDate.getText().toString());
@@ -80,16 +105,13 @@ public class CourseEditActivity extends AppCompatActivity {
         mCourse.setInstructorName(mInstructorName.getText().toString());
         mCourse.setInstructorPhone(mInstructorPhone.getText().toString());
         mCourse.setInstructorEmail(mInstructorEmail.getText().toString());
+        mCourse.setCourseNote(mOptionalNote.getText().toString());
         mCourse.setTerm(mTermId);
-        //mCourse.setCourseNote(mNote);
-
 
         Intent intent = new Intent();
 
-
         if (mCourseId == -1) {
-            long courseId = mStudentDb.courseDao().insertCourse(mCourse);
-            intent.putExtra(EXTRA_COURSE_ID, courseId);
+            mStudentDb.courseDao().insertCourse(mCourse);
         }
         else {
             mStudentDb.courseDao().updateCourse(mCourse);

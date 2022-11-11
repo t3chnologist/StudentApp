@@ -15,6 +15,7 @@
         android:visibility="gone"
         tools:context=".UIController.CourseListAdapter">
         <TextView
+            android:id="@+id/noCourseMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No course to display"

@@ -34,7 +34,7 @@
         android:id="@+id/welcomeImage"
         android:layout_width="191dp"
         android:layout_height="145dp"
-        android:src="@drawable/home_screen_school"
+        android:src="@drawable/school"
         android:onClick="onEnterButtonClick"
         app:layout_constraintBottom_toTopOf="@+id/welcomeMessageTop"
         app:layout_constraintEnd_toEndOf="parent"

@@ -14,6 +14,13 @@ public interface CourseDao {
     @Query("SELECT * FROM coursesTable ORDER BY courseTitle")
     List<Course> getCourses();
 
+    @Query("SELECT * FROM coursesTable WHERE term = :termId")
+    List<Course> getCoursesByTermId(long termId);
+
+
+    @Query("SELECT * FROM coursesTable WHERE id = :courseId")
+    Course getCourseById(long courseId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertCourse(Course course);
 

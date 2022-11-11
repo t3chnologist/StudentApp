@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -27,8 +28,9 @@ import C196PA.BTerbish.StudentApp.Entity.Term;
 import C196PA.BTerbish.StudentApp.R;
 
 public class CourseListAdapter extends AppCompatActivity {
-    public static final String EXTRA_COURSE_ID = "C196PA.BTerbish.StudentApp.Entity.Course";
-    public static final String EXTRA_TERM_ID = "C196PA.BTerbish.StudentApp.Entity.Term";
+    private final int REQUEST_CODE_NEW_COURSE = 0;
+    private final int REQUEST_CODE_UPDATE_COURSE = 1;
+    private final int REQUEST_CODE_DELETE_COURSE = 2;
 
     StudentDatabase mStudentDb;
     private CourseAdapter mCourseAdapter;
@@ -41,6 +43,9 @@ public class CourseListAdapter extends AppCompatActivity {
     private ViewGroup mNoCourseLayout;
     private List<Course> mCourseList;
     private long mTermId;
+    private String mTermTitle;
+    private TextView mCustomNoCourseMessage;
+    private long courseId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,31 +56,37 @@ public class CourseListAdapter extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        mStudentDb = StudentDatabase.getInstance(getApplicationContext());
-        mCourseColors = getResources().getIntArray(R.array.courseColors);
-        mRecyclerView = findViewById(R.id.termRecyclerView);
-        RecyclerView.LayoutManager gridLayoutManager =
-                new GridLayoutManager(getApplicationContext(), 1);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
+        Bundle bundle = getIntent().getExtras();
+        mTermId = bundle.getLong("termId");
+        mCustomNoCourseMessage = findViewById(R.id.noCourseMessage);
         mStudentDb = StudentDatabase.getInstance(getApplicationContext());
         mNoCourseLayout = findViewById(R.id.noCourseLayout);
         mShowCoursesLayout = findViewById(R.id.showCoursesLayout);
-        mCourseList = mStudentDb.courseDao().getCourses();
-        Intent intent = getIntent();
-        mTermId = intent.getLongExtra(EXTRA_TERM_ID, -1);
+
+        mCourseList = mStudentDb.courseDao().getCoursesByTermId(mTermId);
+        mTermTitle = mStudentDb.termDao().getTermById(mTermId).getTermTitle();
+        mCourseColors = getResources().getIntArray(R.array.courseColors);
+        mRecyclerView = findViewById(R.id.termRecyclerView);
+        RecyclerView.LayoutManager gridLayoutManager =
+                new GridLayoutManager(getApplicationContext(), 2);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+
+
+        setTitle(mTermTitle + ": Course list");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mCourseList = mStudentDb.courseDao().getCourses();
+        mCourseList = mStudentDb.courseDao().getCoursesByTermId(mTermId);
         if (mCourseList.size() == 0) {
             displayCourse(false);
+
         }
         else {
             displayCourse(true);
         }
-        mCourseAdapter = new CourseListAdapter.CourseAdapter(mStudentDb.courseDao().getCourses());
+        mCourseAdapter = new CourseListAdapter.CourseAdapter(mStudentDb.courseDao().getCoursesByTermId(mTermId));
         mRecyclerView.setAdapter(mCourseAdapter);
     }
     @Override
@@ -133,12 +144,6 @@ public class CourseListAdapter extends AppCompatActivity {
             return mCourses.size();
         }
 
-        public void addCourse(Course course) {
-            mCourses.add(0, course);
-            notifyItemInserted(0);
-            mRecyclerView.scrollToPosition(0);
-        }
-
         public void removeCourse(Course course) {
             int index = mCourses.indexOf(course);
             if (index >= 0) {
@@ -163,6 +168,7 @@ public class CourseListAdapter extends AppCompatActivity {
 
         public void bind(Course course, int position) {
             mCourse = course;
+            courseId = mCourse.getId();
             mTextView.setText(course.getCourseTitle());
 
             if (mSelectedCoursePosition == position) {
@@ -175,8 +181,11 @@ public class CourseListAdapter extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("courseId", courseId);
+            bundle.putLong("termId", mTermId);
             Intent intent = new Intent(CourseListAdapter.this, CourseDetailsActivity.class);
-            intent.putExtra(CourseDetailsActivity.EXTRA_COURSE_ID, mCourse.getId());
+            intent.putExtras(bundle);
             startActivity(intent);
         }
 
@@ -196,9 +205,12 @@ public class CourseListAdapter extends AppCompatActivity {
         }
     }
     public void onCourseAddClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("courseId", -1);
+        bundle.putLong("termId", mTermId);
         Intent intent = new Intent(CourseListAdapter.this, CourseEditActivity.class);
-        intent.putExtra(EXTRA_TERM_ID, mTermId);
-        startActivity(intent);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_NEW_COURSE);
     }
 
     private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -226,8 +238,10 @@ public class CourseListAdapter extends AppCompatActivity {
                     return true;
                 case R.id.edit:
                     mode.finish();
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("courseId", mSelectedCourse.getId());
                     Intent intent = new Intent(CourseListAdapter.this, CourseEditActivity.class);
-                    intent.putExtra(CourseEditActivity.EXTRA_COURSE_ID, mSelectedCourse.getId());
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 default:
                     return false;
@@ -241,4 +255,18 @@ public class CourseListAdapter extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_NEW_COURSE) {
+            Toast.makeText(this, "Course added", Toast.LENGTH_SHORT).show();
+        }
+        else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_COURSE) {
+            Toast.makeText(this, "Course updated", Toast.LENGTH_SHORT).show();
+        }
+        else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_DELETE_COURSE) {
+            Toast.makeText(this, "Course deleted", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

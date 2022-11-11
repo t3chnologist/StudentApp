@@ -5,6 +5,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -49,7 +51,7 @@ public class TermEditActivity extends AppCompatActivity {
             }
         }
         else {
-            mTerm = mStudentDb.termDao().getTermId(mTermId);
+            mTerm = mStudentDb.termDao().getTermById(mTermId);
             mTermTitle.setText(mTerm.getTermTitle());
 
             mStartDate.setText(mTerm.getStartDate());
@@ -60,8 +62,29 @@ public class TermEditActivity extends AppCompatActivity {
             }
         }
     }
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.edit_new_menu, menu);
+        return true;
+    }
     public void onSaveButtonClick(View view) {
+        saveTerm();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            case R.id.save:
+                saveTerm();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void saveTerm() {
         mTerm.setTermTitle(mTermTitle.getText().toString());
         mTerm.setStartDate(mStartDate.getText().toString());
         mTerm.setEndDate(mEndDate.getText().toString());
@@ -77,16 +100,6 @@ public class TermEditActivity extends AppCompatActivity {
         }
         setResult(RESULT_OK, intent);
         finish();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }

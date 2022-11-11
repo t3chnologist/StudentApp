@@ -1,9 +1,11 @@
 package C196PA.BTerbish.StudentApp.UIController;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,22 +41,19 @@ public class TermDetailsActivity extends AppCompatActivity {
         mTermTitleDetail = findViewById(R.id.termTitleDetails);
         mStartDateDetail = findViewById(R.id.startDateDetails);
         mEndDateDetail = findViewById(R.id.endDateDetails);
+        mTermId = getIntent().getLongExtra(EXTRA_TERM_ID, -1);
 
-        Intent intent = getIntent();
-        mTermId = intent.getLongExtra(EXTRA_TERM_ID, -1);
-        mTerm = mStudentDb.termDao().getTermId(mTermId);
-
-        String termTitle = mTerm.getTermTitle();
-        setTitle("\"" + termTitle + "\" details");
-        mTermTitleDetail.setText(termTitle);
-        mStartDateDetail.setText(mTerm.getStartDate());
-        mEndDateDetail.setText(mTerm.getEndDate());
+        refresh();
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        //refreshing the details
-        mTerm = mStudentDb.termDao().getTermId(mTermId);
+        refresh();
+    }
+
+    public void refresh() {
+        mTerm = mStudentDb.termDao().getTermById(mTermId);
         String termTitle = mTerm.getTermTitle();
         setTitle("\"" + termTitle + "\" details");
         mTermTitleDetail.setText(termTitle);
@@ -80,10 +79,21 @@ public class TermDetailsActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE_UPDATE_TERM);
                 return true;
             case R.id.delete:
-                mStudentDb.termDao().deleteTerm(mTerm);
-                intent = new Intent(this, TermListAdapter.class);
-                startActivity(intent);
-                return true;
+                try {
+                    mStudentDb.termDao().deleteTerm(mTerm);
+                    intent = new Intent(this, TermListAdapter.class);
+                    startActivity(intent);
+                    return true;
+                }
+                catch (RuntimeException e) {
+                    Log.e("", e.toString());
+                    AlertDialog.Builder alert = new AlertDialog.Builder(TermDetailsActivity.this);
+                    alert.setTitle("Term cannot be deleted!");
+                    alert.setMessage("There are course(s) associated with this term.");
+                    alert.setPositiveButton("OK",null);
+                    alert.show();
+                }
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -98,8 +108,10 @@ public class TermDetailsActivity extends AppCompatActivity {
     }
 
     public void onShowCourseButtonClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("termId", mTermId);
         Intent intent = new Intent(TermDetailsActivity.this, CourseListAdapter.class);
-        intent.putExtra(EXTRA_TERM_ID, mTermId);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }
