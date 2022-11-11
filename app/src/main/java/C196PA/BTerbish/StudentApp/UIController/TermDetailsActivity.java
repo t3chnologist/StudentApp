@@ -79,19 +79,16 @@ public class TermDetailsActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE_UPDATE_TERM);
                 return true;
             case R.id.delete:
-                try {
+                if (mStudentDb.courseDao().getCoursesByTermId(mTermId).size() > 0) {
+                    Toast.makeText(TermDetailsActivity.this,
+                            "Term cannot be deleted. Remove associated courses first.",
+                            Toast.LENGTH_LONG).show();
+                }
+                else {
                     mStudentDb.termDao().deleteTerm(mTerm);
                     intent = new Intent(this, TermListAdapter.class);
                     startActivity(intent);
                     return true;
-                }
-                catch (RuntimeException e) {
-                    Log.e("", e.toString());
-                    AlertDialog.Builder alert = new AlertDialog.Builder(TermDetailsActivity.this);
-                    alert.setTitle("Term cannot be deleted!");
-                    alert.setMessage("There are course(s) associated with this term.");
-                    alert.setPositiveButton("OK",null);
-                    alert.show();
                 }
 
             default:

@@ -33,7 +33,7 @@
             android:name=".UIController.CourseListAdapter"
             android:exported="false"
             android:label="Course List"
-            android:parentActivityName=".UIController.TermDetailsActivity">
+            android:parentActivityName=".UIController.TermListAdapter">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

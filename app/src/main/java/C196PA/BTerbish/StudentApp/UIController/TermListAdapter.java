@@ -35,6 +35,7 @@ public class TermListAdapter extends AppCompatActivity {
     private ViewGroup mShowTermsLayout;
     private ViewGroup mNoTermsLayout;
     private List<Term> mTermList;
+    private long mTermId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +66,6 @@ public class TermListAdapter extends AppCompatActivity {
         }
         mTermAdapter = new TermAdapter(mStudentDb.termDao().getTerms());
         mRecyclerView.setAdapter(mTermAdapter);
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (mTermList.size() == 0) {
-            displayTerm(false);
-        }
-        else {
-            displayTerm(true);
-        }
     }
 
     private void displayTerm(boolean display) {
@@ -112,12 +103,6 @@ public class TermListAdapter extends AppCompatActivity {
             return mTerms.size();
         }
 
-        public void addTerm(Term term) {
-            mTerms.add(0, term);
-            notifyItemInserted(0);
-            mRecyclerView.scrollToPosition(0);
-        }
-
         public void removeTerm(Term term) {
             int index = mTerms.indexOf(term);
             if (index >= 0) {
@@ -142,6 +127,7 @@ public class TermListAdapter extends AppCompatActivity {
 
         public void bind(Term term, int position) {
             mTerm = term;
+            mTermId = mTerm.getId();
             mTextView.setText(term.getTermTitle());
 
             if (mSelectedTermPosition == position) {
@@ -197,12 +183,20 @@ public class TermListAdapter extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.delete:
-                    mode.finish();
-                    mStudentDb.termDao().deleteTerm(mSelectedTerm);
-                    mTermAdapter.removeTerm(mSelectedTerm);
-                    Toast.makeText(TermListAdapter.this, "Term deleted",
-                                    Toast.LENGTH_SHORT).show();
-                    return true;
+                    if (mStudentDb.courseDao().getCoursesByTermId(mSelectedTerm.getId()).size() > 0) {
+                        Toast.makeText(TermListAdapter.this,
+                                "This term cannot be deleted. Remove associated courses first.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        mode.finish();
+                        mStudentDb.termDao().deleteTerm(mSelectedTerm);
+                        mTermAdapter.removeTerm(mSelectedTerm);
+                        Toast.makeText(TermListAdapter.this, "Term deleted",
+                                Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+
                 case R.id.edit:
                     mode.finish();
                     Intent intent = new Intent(TermListAdapter.this, TermEditActivity.class);

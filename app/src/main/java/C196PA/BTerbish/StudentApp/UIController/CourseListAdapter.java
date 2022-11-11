@@ -52,9 +52,7 @@ public class CourseListAdapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list_adapter);
 
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
+
 
         Bundle bundle = getIntent().getExtras();
         mTermId = bundle.getLong("termId");
@@ -107,16 +105,6 @@ public class CourseListAdapter extends AppCompatActivity {
             mShowCoursesLayout.setVisibility(View.GONE);
             mNoCourseLayout.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private class CourseAdapter extends RecyclerView.Adapter<CourseListAdapter.CourseHolder>{

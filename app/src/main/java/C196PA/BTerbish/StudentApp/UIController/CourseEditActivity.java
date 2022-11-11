@@ -67,10 +67,20 @@ public class CourseEditActivity extends AppCompatActivity {
 
         if (mCourseId == -1) {
             setTitle("Add course");
+            mCourse = new Course();
         }
         else {
             setTitle("Edit course");
+            mCourse = mStudentDb.courseDao().getCourseById(mCourseId);
+            mCourseTitle.setText(mCourse.getCourseTitle());
+            mStartDate.setText(mCourse.getCourseStartDate());
+            mEndDate.setText(mCourse.getCourseEndDate());
+            mInstructorName.setText(mCourse.getInstructorName());
+            mInstructorPhone.setText(mCourse.getInstructorPhone());
+            mInstructorEmail.setText(mCourse.getInstructorEmail());
+            mOptionalNote.setText(mCourse.getCourseNote());
         }
+
     }
 
     @Override
@@ -97,7 +107,6 @@ public class CourseEditActivity extends AppCompatActivity {
     }
 
     public void saveCourse() {
-        Course mCourse = new Course();
         mCourse.setCourseTitle(mCourseTitle.getText().toString());
         mCourse.setCourseStartDate(mStartDate.getText().toString());
         mCourse.setCourseEndDate(mEndDate.getText().toString());
