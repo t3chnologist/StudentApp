@@ -94,16 +94,15 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/FloatingSaveButton"
-        android:onClick="onSaveButtonClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        android:onClick="onSaveButtonClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.954"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/save"/>
-
+        app:srcCompat="@drawable/save" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

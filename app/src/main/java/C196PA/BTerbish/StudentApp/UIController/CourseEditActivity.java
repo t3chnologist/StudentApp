@@ -66,11 +66,11 @@ public class CourseEditActivity extends AppCompatActivity {
         StudentDatabase mStudentDb = StudentDatabase.getInstance(getApplicationContext());
 
         if (mCourseId == -1) {
-            setTitle("Add course");
+            setTitle(mStudentDb.termDao().getTermById(mTermId).getTermTitle() + ": New Course");
             mCourse = new Course();
         }
         else {
-            setTitle("Edit course");
+            setTitle("Editing: " + mStudentDb.courseDao().getCourseById(mCourseId).getCourseTitle());
             mCourse = mStudentDb.courseDao().getCourseById(mCourseId);
             mCourseTitle.setText(mCourse.getCourseTitle());
             mStartDate.setText(mCourse.getCourseStartDate());
@@ -80,7 +80,6 @@ public class CourseEditActivity extends AppCompatActivity {
             mInstructorEmail.setText(mCourse.getInstructorEmail());
             mOptionalNote.setText(mCourse.getCourseNote());
         }
-
     }
 
     @Override

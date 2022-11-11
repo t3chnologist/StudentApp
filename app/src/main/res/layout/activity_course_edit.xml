@@ -81,13 +81,13 @@
             android:id="@+id/courseStartText"
             android:layout_width="350dp"
             android:layout_height="42dp"
+            android:layout_marginTop="6dp"
             android:background="@drawable/course_text_rounded"
             android:hint="Start date"
             android:inputType="date"
             android:maxLines="1"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:layout_marginTop="6dp"
             app:layout_constraintBottom_toTopOf="@+id/courseEndText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -99,13 +99,13 @@
             android:id="@+id/courseEndText"
             android:layout_width="350dp"
             android:layout_height="42dp"
+            android:layout_marginTop="6dp"
             android:background="@drawable/course_text_rounded"
             android:hint="End date"
             android:inputType="date"
             android:maxLines="1"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:layout_marginTop="6dp"
             app:layout_constraintBottom_toTopOf="@+id/statusSpinner"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -117,10 +117,10 @@
             android:id="@+id/statusSpinner"
             android:layout_width="350dp"
             android:layout_height="42dp"
+            android:layout_marginTop="6dp"
             android:background="@drawable/course_text_rounded"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:layout_marginTop="6dp"
             app:layout_constraintBottom_toTopOf="@+id/titleLabel2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -150,13 +150,13 @@
             android:id="@+id/instructorPhoneText"
             android:layout_width="350dp"
             android:layout_height="42dp"
+            android:layout_marginTop="6dp"
             android:background="@drawable/course_text_rounded"
             android:hint="Instructor phone"
             android:inputType="phone"
             android:maxLines="1"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:layout_marginTop="6dp"
             app:layout_constraintBottom_toTopOf="@+id/instructorEmailText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -168,13 +168,13 @@
             android:id="@+id/instructorEmailText"
             android:layout_width="350dp"
             android:layout_height="42dp"
+            android:layout_marginTop="6dp"
             android:background="@drawable/course_text_rounded"
             android:hint="Instructor email"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:layout_marginTop="6dp"
             app:layout_constraintBottom_toTopOf="@+id/titleLabel3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -210,7 +210,116 @@
             app:layout_constraintTop_toBottomOf="@+id/titleLabel3"
             app:layout_constraintVertical_bias="0.5" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Title"
+            android:textColor="#4CAF50"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/courseTitleText"
+            app:layout_constraintStart_toStartOf="@+id/courseTitleText"
+            app:layout_constraintTop_toTopOf="@+id/courseTitleText"
+            app:layout_constraintVertical_bias="0.0" />
 
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Start date"
+            android:textColor="#4CAF50"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/courseStartText"
+            app:layout_constraintStart_toStartOf="@+id/courseStartText"
+            app:layout_constraintTop_toTopOf="@+id/courseStartText"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="End date"
+            android:textColor="#4CAF50"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/courseEndText"
+            app:layout_constraintStart_toStartOf="@+id/courseEndText"
+            app:layout_constraintTop_toTopOf="@+id/courseEndText"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Status"
+            android:textColor="#4CAF50"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/statusSpinner"
+            app:layout_constraintStart_toStartOf="@+id/statusSpinner"
+            app:layout_constraintTop_toTopOf="@+id/statusSpinner"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Name"
+            android:textColor="#4CAF50"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/instructorNameText"
+            app:layout_constraintStart_toStartOf="@+id/instructorNameText"
+            app:layout_constraintTop_toTopOf="@+id/instructorNameText"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Phone"
+            android:textColor="#4CAF50"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/instructorPhoneText"
+            app:layout_constraintStart_toStartOf="@+id/instructorPhoneText"
+            app:layout_constraintTop_toTopOf="@+id/instructorPhoneText"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Email"
+            android:textColor="#4CAF50"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/instructorEmailText"
+            app:layout_constraintStart_toStartOf="@+id/instructorEmailText"
+            app:layout_constraintTop_toTopOf="@+id/instructorEmailText"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Note"
+            android:textColor="#4CAF50"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/courseNoteOptionalText"
+            app:layout_constraintStart_toStartOf="@+id/courseNoteOptionalText"
+            app:layout_constraintTop_toTopOf="@+id/courseNoteOptionalText"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

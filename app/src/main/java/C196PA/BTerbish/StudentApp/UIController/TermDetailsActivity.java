@@ -139,9 +139,22 @@ public class TermDetailsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_TERM) {
             Toast.makeText(this, "Term updated", Toast.LENGTH_SHORT).show();
+
+            Bundle bundle = data.getExtras();
+            long termId = bundle.getLong("termId");
+            mTermId = termId;
+            String termTitle = mStudentDb.termDao().getTermById(mTermId).getTermTitle();
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Successfully updated \"" + termTitle + "\"")
+                    .setMessage("Would you like to make updates to course(s) in this term?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            showAssociatedCourses();
+                        }})
+                    .setNegativeButton("No", null).show();
         }
     }
-
 
     public void onAddCourseButtonClick(View view) {
         Bundle bundle = new Bundle();

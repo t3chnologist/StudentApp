@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Term;
@@ -57,7 +58,7 @@ public class TermEditActivity extends AppCompatActivity {
             mEndDate.setText(mTerm.getEndDate());
 
             if(actionBar != null) {
-                setTitle("Edit term");
+                setTitle("Editing: " + mTermTitle.getText());
             }
         }
     }
@@ -88,16 +89,18 @@ public class TermEditActivity extends AppCompatActivity {
         mTerm.setStartDate(mStartDate.getText().toString());
         mTerm.setEndDate(mEndDate.getText().toString());
         Intent intent = new Intent();
+        Bundle bundle = new Bundle();
 
         if (mTermId == -1) {
             long newTermId = mStudentDb.termDao().insertTerm(mTerm);
-            Bundle bundle = new Bundle();
             bundle.putLong("termId", newTermId);
             intent.putExtras(bundle);
         }
         else {
             mStudentDb.termDao().updateTerm(mTerm);
+            bundle.putLong("termId", mTerm.getId());
             intent = new Intent(this, TermListAdapter.class);
+            intent.putExtras(bundle);
         }
         setResult(RESULT_OK, intent);
         finish();

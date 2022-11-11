@@ -234,6 +234,7 @@ public class TermListAdapter extends AppCompatActivity {
             Bundle bundle = data.getExtras();
             long newTermId = bundle.getLong("termId");
             String newTermTitle = mStudentDb.termDao().getTermById(newTermId).getTermTitle();
+
             new AlertDialog.Builder(this)
                     .setTitle("Successfully added term \"" + newTermTitle + "\"")
                     .setMessage("Would you like to add course to this term?")

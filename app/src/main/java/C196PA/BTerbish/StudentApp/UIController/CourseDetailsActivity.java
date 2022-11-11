@@ -136,6 +136,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_COURSE) {
             Toast.makeText(this, "Course updated", Toast.LENGTH_SHORT).show();
 
+
         }
     }
 }

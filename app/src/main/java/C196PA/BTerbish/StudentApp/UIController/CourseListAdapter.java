@@ -52,8 +52,6 @@ public class CourseListAdapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list_adapter);
 
-
-
         Bundle bundle = getIntent().getExtras();
         mTermId = bundle.getLong("termId");
         mCustomNoCourseMessage = findViewById(R.id.noCourseMessage);

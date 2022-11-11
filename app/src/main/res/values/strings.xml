@@ -15,7 +15,6 @@
     <string name="term_title">Term title:</string>
 
     <string-array name="course_status_array">
-        <item>Select course status</item>
         <item>In progress</item>
         <item>Completed</item>
         <item>Dropped</item>
