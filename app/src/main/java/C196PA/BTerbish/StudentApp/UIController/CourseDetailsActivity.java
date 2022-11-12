@@ -92,16 +92,18 @@ public class CourseDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.context_menu, menu);
+        inflater.inflate(R.menu.course_details_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+
             case android.R.id.home:
                 this.finish();
                 return true;
+
             case R.id.edit:
                 Bundle bundle = new Bundle();
                 bundle.putLong("courseId", mCourseId);
@@ -110,6 +112,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_CODE_UPDATE_COURSE);
                 return true;
+
             case R.id.delete:
                 new AlertDialog.Builder(this)
                         .setTitle("Course: " + mCourseTitle.getText())
@@ -126,6 +129,24 @@ public class CourseDetailsActivity extends AppCompatActivity {
                             }})
                         .setNegativeButton("No", null).show();
                 return true;
+
+            case R.id.shareNote:
+                String noteString = mOptionalNote.getText().toString();
+                if (noteString.isEmpty()) {
+                    new AlertDialog.Builder(this)
+                            .setTitle("Nothing to share")
+                            .setMessage("Note is empty.\n" +
+                                    "Add a note first.")
+                            .setPositiveButton("OK", null)
+                            .show();
+                }
+                else {
+                    String textBody = mCourseTitle.getText() + " course note:\n\n" + noteString;
+                    Intent intentShare = new Intent(Intent.ACTION_SEND);
+                    intentShare.setType("text/plain");
+                    intentShare.putExtra(Intent.EXTRA_TEXT, textBody);
+                    startActivity(intentShare);
+                }
         }
         return super.onOptionsItemSelected(item);
     }
