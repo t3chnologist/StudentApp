@@ -1,117 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:id="@+id/termDetailsCoordinatorLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".UIController.TermDetailsActivity">
+    android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/termTitleLabel"
-        android:layout_width="100dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/term_title"
-        android:textAlignment="viewStart"
-        android:textColor="#01579B"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.07"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".UIController.TermDetailsActivity">
 
-    <TextView
-        android:id="@+id/termTitleDetails"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/term_text_rounded"
-        android:maxLines="1"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termTitleLabel" />
+        <TextView
+            android:id="@+id/termTitleLabel"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/term_title"
+            android:textAlignment="viewStart"
+            android:textColor="#01579B"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.07"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/startDateLabel"
-        android:layout_width="100dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="20dp"
-        android:text="Start date:"
-        android:textAlignment="viewStart"
-        android:textColor="#01579B"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.072"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termTitleDetails" />
+        <TextView
+            android:id="@+id/termTitleDetails"
+            android:layout_width="320dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/term_text_rounded"
+            android:maxLines="1"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/termTitleLabel" />
 
-    <TextView
-        android:id="@+id/startDateDetails"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/term_text_rounded"
-        android:ems="10"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startDateLabel" />
+        <TextView
+            android:id="@+id/startDateLabel"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="20dp"
+            android:text="Start date:"
+            android:textAlignment="viewStart"
+            android:textColor="#01579B"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.072"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/termTitleDetails" />
 
-    <TextView
-        android:id="@+id/endDateLabel"
-        android:layout_width="100dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="20dp"
-        android:text="End date:"
-        android:textAlignment="viewStart"
-        android:textColor="#01579B"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.072"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startDateDetails" />
+        <TextView
+            android:id="@+id/startDateDetails"
+            android:layout_width="320dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/term_text_rounded"
+            android:ems="10"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/startDateLabel" />
 
-    <TextView
-        android:id="@+id/endDateDetails"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/term_text_rounded"
-        android:ems="10"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateLabel" />
+        <TextView
+            android:id="@+id/endDateLabel"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="20dp"
+            android:text="End date:"
+            android:textAlignment="viewStart"
+            android:textColor="#01579B"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.072"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/startDateDetails" />
 
-    <Button
-        android:id="@+id/showCourseButtonId"
-        android:layout_width="213dp"
-        android:layout_height="59dp"
-        android:onClick="onShowCourseButtonClick"
-        android:text="Show course(s)"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateDetails"
-        app:layout_constraintVertical_bias="0.188" />
+        <TextView
+            android:id="@+id/endDateDetails"
+            android:layout_width="320dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/term_text_rounded"
+            android:ems="10"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/endDateLabel" />
 
-    <Button
-        android:id="@+id/addCourseButtonId"
-        android:layout_width="213dp"
-        android:layout_height="59dp"
-        android:onClick="onAddCourseButtonClick"
-        android:text="Add Course"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateDetails"
-        app:layout_constraintVertical_bias="0.188" />
+        <Button
+            android:id="@+id/addCourseButtonId"
+            android:layout_width="213dp"
+            android:layout_height="59dp"
+            android:onClick="onAddCourseButtonClick"
+            android:text="Add Course"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/endDateDetails"
+            app:layout_constraintVertical_bias="0.12" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/showCourseButtonId"
+            android:layout_width="213dp"
+            android:layout_height="59dp"
+            android:onClick="onShowCourseButtonClick"
+            android:text="Show course(s)"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addCourseButtonId"
+            app:layout_constraintVertical_bias="0.087" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

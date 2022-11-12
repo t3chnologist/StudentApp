@@ -3,7 +3,6 @@ package C196PA.BTerbish.StudentApp.UIController;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Course;
 import C196PA.BTerbish.StudentApp.R;
@@ -97,6 +95,7 @@ public class CourseEditActivity extends AppCompatActivity {
                 return true;
             case R.id.save:
                 saveCourse();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -116,15 +115,15 @@ public class CourseEditActivity extends AppCompatActivity {
         mCourse.setCourseNote(mOptionalNote.getText().toString());
         mCourse.setTerm(mTermId);
 
-        Intent intent = new Intent();
+        Intent intent;
 
         if (mCourseId == -1) {
             mStudentDb.courseDao().insertCourse(mCourse);
-
+            intent = new Intent(this, CourseListAdapter.class);
         }
         else {
             mStudentDb.courseDao().updateCourse(mCourse);
-            intent = new Intent(this, CourseDetailsActivity.class);
+            intent = new Intent(this, CourseListAdapter.class);
         }
         setResult(RESULT_OK, intent);
         finish();

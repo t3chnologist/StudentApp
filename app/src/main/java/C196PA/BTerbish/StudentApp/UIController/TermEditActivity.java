@@ -9,14 +9,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Term;
 import C196PA.BTerbish.StudentApp.R;
 
 public class TermEditActivity extends AppCompatActivity {
-
 
     private StudentDatabase mStudentDb;
     private EditText mTermTitle;
@@ -61,6 +59,8 @@ public class TermEditActivity extends AppCompatActivity {
                 setTitle("Editing: " + mTermTitle.getText());
             }
         }
+
+        mTermTitle.requestFocus();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

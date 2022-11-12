@@ -3,19 +3,16 @@ package C196PA.BTerbish.StudentApp.UIController;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import com.google.android.material.snackbar.Snackbar;
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Term;
 import C196PA.BTerbish.StudentApp.R;
@@ -71,11 +68,9 @@ public class TermDetailsActivity extends AppCompatActivity {
 
         if (mStudentDb.courseDao().getCoursesByTermId(mTermId).size() > 0) {
             showCourseButton.setVisibility(View.VISIBLE);
-            addCourseButton.setVisibility(View.GONE);
         }
         else {
             showCourseButton.setVisibility(View.GONE);
-            addCourseButton.setVisibility(View.VISIBLE);
         }
 
     }
@@ -102,6 +97,7 @@ public class TermDetailsActivity extends AppCompatActivity {
             case R.id.delete:
                 //check if term has course associated
                 if (mStudentDb.courseDao().getCoursesByTermId(mTermId).size() > 0) {
+
                     new AlertDialog.Builder(this)
                             .setTitle("Warning")
                             .setMessage("This term cannot be deleted.\n" +
@@ -115,20 +111,16 @@ public class TermDetailsActivity extends AppCompatActivity {
                             }).show();
                 }
                 else {
-                    new AlertDialog.Builder(this)
-                            .setTitle("Term: " + mTermTitleDetail.getText())
-                            .setMessage("Are you sure you want to delete this term?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    mStudentDb.termDao().deleteTerm(mTerm);
-                                    Intent intent = new Intent(TermDetailsActivity.this,
-                                                                    TermListAdapter.class);
-                                    startActivity(intent);
-                                }})
-                            .setNegativeButton("No", null).show();
+                    bundle = new Bundle();
+                    bundle.putLong("termId", mTermId);
+                    bundle.putBoolean("deleteTerm", true);
+                    intent = new Intent(TermDetailsActivity.this,
+                            TermListAdapter.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+
                     return true;
                 }
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -138,21 +130,13 @@ public class TermDetailsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_TERM) {
-            Toast.makeText(this, "Term updated", Toast.LENGTH_SHORT).show();
 
-            Bundle bundle = data.getExtras();
-            long termId = bundle.getLong("termId");
-            mTermId = termId;
-            String termTitle = mStudentDb.termDao().getTermById(mTermId).getTermTitle();
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Successfully updated \"" + termTitle + "\"")
-                    .setMessage("Would you like to make updates to course(s) in this term?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            showAssociatedCourses();
-                        }})
-                    .setNegativeButton("No", null).show();
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.termDetailsCoordinatorLayout),
+                    "Term updated", Snackbar.LENGTH_LONG);
+            snackbar.setAction("Update course", (v) -> {
+                showAssociatedCourses();
+            });
+            snackbar.show();
         }
     }
 

@@ -1,10 +1,8 @@
 package C196PA.BTerbish.StudentApp.UIController;
-import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,17 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.List;
-import java.util.Random;
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Term;
 import C196PA.BTerbish.StudentApp.R;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 public class TermListAdapter extends AppCompatActivity {
 
     private final int REQUEST_CODE_NEW_TERM = 0;
     private final int REQUEST_CODE_UPDATE_TERM = 1;
-    private final int REQUEST_CODE_DELETE_TERM = 2;
     StudentDatabase mStudentDb;
     private TermAdapter mTermAdapter;
     private RecyclerView mRecyclerView;
@@ -39,6 +35,7 @@ public class TermListAdapter extends AppCompatActivity {
     private ViewGroup mNoTermsLayout;
     private List<Term> mTermList;
     private long mTermId;
+    private Term mDeletedTerm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +66,14 @@ public class TermListAdapter extends AppCompatActivity {
         }
         mTermAdapter = new TermAdapter(mStudentDb.termDao().getTerms());
         mRecyclerView.setAdapter(mTermAdapter);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.getBoolean("deleteTerm")) {
+            getIntent().removeExtra("deleteTerm");
+            mTermId = bundle.getLong("termId");
+            mSelectedTerm = mStudentDb.termDao().getTermById(mTermId);
+            deleteTerm(mSelectedTerm);
+        }
     }
 
     private void displayTerm(boolean display) {
@@ -155,7 +160,6 @@ public class TermListAdapter extends AppCompatActivity {
             if (mActionMode != null) {
                 return false;
             }
-
             mActionMode = TermListAdapter.this.startActionMode(mActionModeCallback);
             mSelectedTerm = mTerm;
             mSelectedTermPosition = getAdapterPosition();
@@ -192,16 +196,15 @@ public class TermListAdapter extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.delete:
                     if (mStudentDb.courseDao().getCoursesByTermId(mSelectedTerm.getId()).size() > 0) {
-                        Toast.makeText(TermListAdapter.this,
-                                "This term cannot be deleted. Remove associated courses first.",
-                                Toast.LENGTH_LONG).show();
+                        mode.finish();
+                        mTermId = mSelectedTerm.getId();
+                        showMessage("Unable to delete! Remove associated courses first.",
+                                    "See courses");
+                        return true;
                     }
                     else {
                         mode.finish();
-                        mStudentDb.termDao().deleteTerm(mSelectedTerm);
-                        mTermAdapter.removeTerm(mSelectedTerm);
-                        Toast.makeText(TermListAdapter.this, "Term deleted",
-                                Toast.LENGTH_SHORT).show();
+                        deleteTerm(mSelectedTerm);
                         return true;
                     }
 
@@ -229,32 +232,55 @@ public class TermListAdapter extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_NEW_TERM) {
-            Toast.makeText(this, "Term added", Toast.LENGTH_SHORT).show();
-
             Bundle bundle = data.getExtras();
-            long newTermId = bundle.getLong("termId");
-            String newTermTitle = mStudentDb.termDao().getTermById(newTermId).getTermTitle();
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Successfully added term \"" + newTermTitle + "\"")
-                    .setMessage("Would you like to add course to this term?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            Bundle bundle = new Bundle();
-                            bundle.putLong("courseId", -1);
-                            bundle.putLong("termId", newTermId);
-                            Intent intent = new Intent(TermListAdapter.this,
-                                                            CourseEditActivity.class);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                        }})
-                    .setNegativeButton("No", null).show();
+            mTermId = bundle.getLong("termId");
+            String newTermTitle = mStudentDb.termDao().getTermById(mTermId).getTermTitle();
+            showMessage("Added: " + newTermTitle, "Add course");
         }
         else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_TERM) {
-            Toast.makeText(this, "Term updated", Toast.LENGTH_SHORT).show();
+            showMessage("Term updated", "Update course");
         }
-        else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_DELETE_TERM) {
-            Toast.makeText(this, "Term deleted", Toast.LENGTH_SHORT).show();
+    }
+
+    public void deleteTerm(Term selectedTerm) {
+        mDeletedTerm = selectedTerm;
+        mStudentDb.termDao().deleteTerm(selectedTerm);
+        mTermAdapter.removeTerm(selectedTerm);
+        onResume();
+        showMessage("Term deleted", "Undo");
+    }
+
+    public void showMessage(String message, String action) {
+
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.termListCoordinatorLayout),
+                                          message, Snackbar.LENGTH_LONG);
+
+        if (action == "Undo"){
+            snackbar.setAction(action, (v) -> {
+                mStudentDb.termDao().insertTerm(mDeletedTerm);
+                mTermList.add(mDeletedTerm);
+                onResume();
+            });
         }
+        else if (action == "See courses" || action == "Update course") {
+            snackbar.setAction(action, (v) -> {
+                Bundle bundle = new Bundle();
+                bundle.putLong("termId", mTermId);
+                Intent intent = new Intent(TermListAdapter.this, CourseListAdapter.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            });
+        }
+        else if (action == "Add course") {
+            snackbar.setAction(action, (v) -> {
+                Bundle bundle = new Bundle();
+                bundle.putLong("courseId", -1);
+                bundle.putLong("termId", mTermId);
+                Intent intent = new Intent(TermListAdapter.this, CourseEditActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            });
+        }
+        snackbar.show();
     }
 }

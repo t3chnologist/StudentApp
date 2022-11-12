@@ -1,14 +1,9 @@
 package C196PA.BTerbish.StudentApp.UIController;
 
-import static android.app.PendingIntent.getActivity;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,14 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Course;
 import C196PA.BTerbish.StudentApp.R;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-
-import java.util.Objects;
 
 public class CourseDetailsActivity extends AppCompatActivity {
 
@@ -64,18 +54,11 @@ public class CourseDetailsActivity extends AppCompatActivity {
         mInstructorPhone = findViewById(R.id.instructorPhoneView);
         mInstructorEmail = findViewById(R.id.instructorEmailView);
         mOptionalNote = findViewById(R.id.courseNoteView);
-
-        refresh();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        refresh();
-    }
-
-    public void refresh() {
-
         mCourse = mStudentDb.courseDao().getCourseById(mCourseId);
         String courseTitle =mCourse.getCourseTitle();
         setTitle("\"" + courseTitle + "\" details");
@@ -156,8 +139,6 @@ public class CourseDetailsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_COURSE) {
             Toast.makeText(this, "Course updated", Toast.LENGTH_SHORT).show();
-
-
         }
     }
 }

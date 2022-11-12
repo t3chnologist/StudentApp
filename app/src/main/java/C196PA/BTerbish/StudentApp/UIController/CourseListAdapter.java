@@ -1,14 +1,10 @@
 package C196PA.BTerbish.StudentApp.UIController;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -19,12 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.List;
-
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Course;
-import C196PA.BTerbish.StudentApp.Entity.Term;
 import C196PA.BTerbish.StudentApp.R;
 
 public class CourseListAdapter extends AppCompatActivity {
@@ -54,6 +47,7 @@ public class CourseListAdapter extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         mTermId = bundle.getLong("termId");
+
         mCustomNoCourseMessage = findViewById(R.id.noCourseMessage);
         mStudentDb = StudentDatabase.getInstance(getApplicationContext());
         mNoCourseLayout = findViewById(R.id.noCourseLayout);
@@ -67,7 +61,6 @@ public class CourseListAdapter extends AppCompatActivity {
                 new GridLayoutManager(getApplicationContext(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-
         setTitle(mTermTitle + ": Course list");
     }
 
@@ -77,7 +70,6 @@ public class CourseListAdapter extends AppCompatActivity {
         mCourseList = mStudentDb.courseDao().getCoursesByTermId(mTermId);
         if (mCourseList.size() == 0) {
             displayCourse(false);
-
         }
         else {
             displayCourse(true);
@@ -85,16 +77,7 @@ public class CourseListAdapter extends AppCompatActivity {
         mCourseAdapter = new CourseListAdapter.CourseAdapter(mStudentDb.courseDao().getCoursesByTermId(mTermId));
         mRecyclerView.setAdapter(mCourseAdapter);
     }
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (mCourseList.size() == 0) {
-            displayCourse(false);
-        }
-        else {
-            displayCourse(true);
-        }
-    }
+
     private void displayCourse(boolean display) {
         if (display) {
             mShowCoursesLayout.setVisibility(View.VISIBLE);
@@ -168,8 +151,9 @@ public class CourseListAdapter extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Bundle bundle = new Bundle();
-            bundle.putLong("courseId", courseId);
+            bundle.putLong("courseId", mCourse.getId());
             bundle.putLong("termId", mTermId);
+
             Intent intent = new Intent(CourseListAdapter.this, CourseDetailsActivity.class);
             intent.putExtras(bundle);
             startActivity(intent);
