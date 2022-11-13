@@ -3,26 +3,29 @@ package C196PA.BTerbish.StudentApp.UIController;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+import java.util.Calendar;
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Term;
 import C196PA.BTerbish.StudentApp.R;
 
-public class TermEditActivity extends AppCompatActivity {
+public class TermEditActivity extends AppCompatActivity{
 
     private StudentDatabase mStudentDb;
     private EditText mTermTitle;
-    private EditText mStartDate;
-    private EditText mEndDate;
+    private TextView mStartDate;
+    private TextView mEndDate;
     private long mTermId;
     private Term mTerm;
-    private final int REQUEST_CODE_UPDATE_TERM = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,48 @@ public class TermEditActivity extends AppCompatActivity {
         mTermTitle = findViewById(R.id.termTitleText);
         mStartDate = findViewById(R.id.startDateText);
         mEndDate = findViewById(R.id.endDateText);
+
+        mStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(TermEditActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                mStartDate.setText(monthOfYear + "/" + dayOfMonth + "/" + year);
+                            }
+                        },
+                        year, month, day);
+                datePickerDialog.show();
+            }
+        });
+
+        mEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(TermEditActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                mEndDate.setText(monthOfYear + "/" + dayOfMonth + "/" + year);
+                            }
+                        },
+                        year, month, day);
+                datePickerDialog.show();
+            }
+        });
 
         Bundle bundle = getIntent().getExtras();
         mTermId = bundle.getLong("termId");
@@ -105,5 +150,4 @@ public class TermEditActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
-
 }

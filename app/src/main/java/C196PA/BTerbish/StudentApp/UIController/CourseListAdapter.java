@@ -3,6 +3,7 @@ package C196PA.BTerbish.StudentApp.UIController;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -56,7 +57,7 @@ public class CourseListAdapter extends AppCompatActivity {
         mCourseList = mStudentDb.courseDao().getCoursesByTermId(mTermId);
         mTermTitle = mStudentDb.termDao().getTermById(mTermId).getTermTitle();
         mCourseColors = getResources().getIntArray(R.array.courseColors);
-        mRecyclerView = findViewById(R.id.termRecyclerView);
+        mRecyclerView = findViewById(R.id.courseRecyclerView);
         RecyclerView.LayoutManager gridLayoutManager =
                 new GridLayoutManager(getApplicationContext(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
@@ -132,7 +133,7 @@ public class CourseListAdapter extends AppCompatActivity {
             super(inflater.inflate(R.layout.recycler_view_items, parent, false));
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-            mTextView = itemView.findViewById(R.id.termTextView);
+            mTextView = itemView.findViewById(R.id.recyclerTextView);
         }
 
         public void bind(Course course, int position) {

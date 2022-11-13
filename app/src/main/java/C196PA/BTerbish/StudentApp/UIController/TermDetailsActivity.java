@@ -138,6 +138,17 @@ public class TermDetailsActivity extends AppCompatActivity {
             });
             snackbar.show();
         }
+        else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_TERM) {
+
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.termDetailsCoordinatorLayout),
+                    "Term updated", Snackbar.LENGTH_LONG);
+            snackbar.setAction("Update course", (v) -> {
+                showAssociatedCourses();
+            });
+            snackbar.setDuration(6000);
+            snackbar.show();
+        }
+
     }
 
     public void onAddCourseButtonClick(View view) {

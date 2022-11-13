@@ -3,6 +3,8 @@ package C196PA.BTerbish.StudentApp.UIController;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,8 +12,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.util.Calendar;
+
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Course;
 import C196PA.BTerbish.StudentApp.R;
@@ -20,8 +27,8 @@ public class CourseEditActivity extends AppCompatActivity {
 
     private StudentDatabase mStudentDb;
     private EditText mCourseTitle;
-    private EditText mStartDate;
-    private EditText mEndDate;
+    private TextView mStartDate;
+    private TextView mEndDate;
     private Spinner mStatus;
     private EditText mInstructorName;
     private EditText mInstructorPhone;
@@ -30,6 +37,7 @@ public class CourseEditActivity extends AppCompatActivity {
     private long mTermId;
     private long mCourseId;
     private Course mCourse;
+    private boolean addNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +54,49 @@ public class CourseEditActivity extends AppCompatActivity {
         mEndDate = findViewById(R.id.courseEndText);
         mStatus = findViewById(R.id.statusSpinner);
 
+        mStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(CourseEditActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                mStartDate.setText(monthOfYear + "/" + dayOfMonth + "/" + year);
+                            }
+                        },
+                        year, month, day);
+                datePickerDialog.show();
+            }
+        });
+
+        mEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(CourseEditActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                mEndDate.setText(monthOfYear + "/" + dayOfMonth + "/" + year);
+                            }
+                        },
+                        year, month, day);
+                datePickerDialog.show();
+            }
+        });
+
+
         Spinner spinner = findViewById(R.id.statusSpinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.course_status_array, android.R.layout.simple_spinner_item);
@@ -60,6 +111,7 @@ public class CourseEditActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         mCourseId = bundle.getLong("courseId");
         mTermId = bundle.getLong("termId");
+        addNote = bundle.getBoolean("addNote");
 
         StudentDatabase mStudentDb = StudentDatabase.getInstance(getApplicationContext());
 
@@ -77,6 +129,14 @@ public class CourseEditActivity extends AppCompatActivity {
             mInstructorPhone.setText(mCourse.getInstructorPhone());
             mInstructorEmail.setText(mCourse.getInstructorEmail());
             mOptionalNote.setText(mCourse.getCourseNote());
+
+            if (addNote) {
+                getIntent().removeExtra("addNote");
+                mOptionalNote.requestFocus();
+            }
+            else {
+                mCourseTitle.requestFocus();
+            }
         }
     }
 
@@ -120,6 +180,7 @@ public class CourseEditActivity extends AppCompatActivity {
         if (mCourseId == -1) {
             mStudentDb.courseDao().insertCourse(mCourse);
             intent = new Intent(this, CourseListAdapter.class);
+
         }
         else {
             mStudentDb.courseDao().updateCourse(mCourse);

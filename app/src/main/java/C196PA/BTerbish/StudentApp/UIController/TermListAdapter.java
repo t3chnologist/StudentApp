@@ -130,7 +130,7 @@ public class TermListAdapter extends AppCompatActivity {
             super(inflater.inflate(R.layout.recycler_view_items, parent, false));
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-            mTextView = itemView.findViewById(R.id.termTextView);
+            mTextView = itemView.findViewById(R.id.recyclerTextView);
         }
 
         public void bind(Term term, int position) {
@@ -281,6 +281,7 @@ public class TermListAdapter extends AppCompatActivity {
                 startActivity(intent);
             });
         }
+        snackbar.setDuration(6000);
         snackbar.show();
     }
 }

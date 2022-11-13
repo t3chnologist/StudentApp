@@ -12,6 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Course;
 import C196PA.BTerbish.StudentApp.R;
@@ -88,12 +91,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 return true;
 
             case R.id.edit:
-                Bundle bundle = new Bundle();
-                bundle.putLong("courseId", mCourseId);
-                bundle.putLong("termId", mTermId);
-                Intent intent = new Intent(this, CourseEditActivity.class);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_CODE_UPDATE_COURSE);
+                editCourse(mCourseId, mTermId, false);
                 return true;
 
             case R.id.delete:
@@ -114,14 +112,27 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 return true;
 
             case R.id.shareNote:
+
                 String noteString = mOptionalNote.getText().toString();
+
                 if (noteString.isEmpty()) {
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.courseDetailsCoordinatorLayout),
+                            "Can't share empty note.", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("Add note", (v) -> {
+                        editCourse(mCourseId, mTermId, true);
+                    });
+                    snackbar.setDuration(6000);
+                    snackbar.show();
+
+                    /*
                     new AlertDialog.Builder(this)
                             .setTitle("Nothing to share")
                             .setMessage("Note is empty.\n" +
                                     "Add a note first.")
                             .setPositiveButton("OK", null)
                             .show();
+
+                     */
                 }
                 else {
                     String textBody = mCourseTitle.getText() + " course note:\n\n" + noteString;
@@ -138,7 +149,18 @@ public class CourseDetailsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_COURSE) {
+
             Toast.makeText(this, "Course updated", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void editCourse(long courseId, long termId, boolean addNote) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("courseId", courseId);
+        bundle.putLong("termId", termId);
+        bundle.putBoolean("addNote", addNote);
+        Intent intent = new Intent(this, CourseEditActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_UPDATE_COURSE);
     }
 }

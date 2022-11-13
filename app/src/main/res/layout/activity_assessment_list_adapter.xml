@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:id="@+id/coordinatorLayoutCourse"
+    android:id="@+id/assessmentCoordinatorLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,26 +9,25 @@
     android:layout_height="match_parent" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/noCourseLayout"
+        android:id="@+id/noAssessmentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        tools:context=".UIController.CourseListAdapter">
+        tools:context=".UIController.AssessmentListAdapter">
         <TextView
-            android:id="@+id/noCourseMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No course to display"
+            android:text="No assessment to display"
             android:textSize="22sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/addCourseButtonEmpty"/>
+            app:layout_constraintBottom_toTopOf="@+id/addAssessmentButton"/>
         <Button
-            android:id="@+id/addCourseButtonEmpty"
+            android:id="@+id/addAssessmentButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add course"
-            android:onClick="onCourseAddClick"
+            android:text="Add assessment"
+            android:onClick="onAssessmentAddClick"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -36,13 +35,13 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/showCoursesLayout"
+        android:id="@+id/showAssessmentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".UIController.CourseListAdapter">
+        tools:context=".UIController.AssessmentListAdapter">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/courseRecyclerView"
+            android:id="@+id/termRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical" />
@@ -53,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
-            android:onClick="onCourseAddClick"
+            android:onClick="onAssessmentAddClick"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/add"
