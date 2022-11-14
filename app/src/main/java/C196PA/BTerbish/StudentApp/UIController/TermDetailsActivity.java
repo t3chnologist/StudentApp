@@ -20,8 +20,8 @@ import C196PA.BTerbish.StudentApp.R;
 public class TermDetailsActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE_UPDATE_TERM = 1;
-    long mTermId;
-    Term mTerm;
+    private long mTermId;
+    private Term mTerm;
     StudentDatabase mStudentDb;
     private TextView mTermTitleDetail;
     private TextView mStartDateDetail;
@@ -148,7 +148,6 @@ public class TermDetailsActivity extends AppCompatActivity {
             snackbar.setDuration(6000);
             snackbar.show();
         }
-
     }
 
     public void onAddCourseButtonClick(View view) {

@@ -17,8 +17,14 @@ public interface AssessmentDao {
     @Query("SELECT * FROM assessmentTable ORDER BY assessmentTitle")
     List<Assessment> getAssessments();
 
+    @Query("SELECT * FROM assessmentTable WHERE course = :courseId")
+    List<Assessment> getAssessmentsByCourseId(long courseId);
+
+    @Query("SELECT * FROM assessmentTable WHERE course = :assessmentId")
+    Assessment getAssessmentById(long assessmentId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAssessment(Assessment assessment);
+    long insertAssessment(Assessment assessment);
 
     @Update
     void updateAssessment(Assessment assessment);

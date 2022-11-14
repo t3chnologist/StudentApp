@@ -113,15 +113,14 @@ public class CourseEditActivity extends AppCompatActivity {
         mTermId = bundle.getLong("termId");
         addNote = bundle.getBoolean("addNote");
 
-        StudentDatabase mStudentDb = StudentDatabase.getInstance(getApplicationContext());
-
         if (mCourseId == -1) {
             setTitle(mStudentDb.termDao().getTermById(mTermId).getTermTitle() + ": New Course");
             mCourse = new Course();
         }
         else {
-            setTitle("Editing: " + mStudentDb.courseDao().getCourseById(mCourseId).getCourseTitle());
             mCourse = mStudentDb.courseDao().getCourseById(mCourseId);
+            setTitle("Editing: " + mCourse.getCourseTitle());
+
             mCourseTitle.setText(mCourse.getCourseTitle());
             mStartDate.setText(mCourse.getCourseStartDate());
             mEndDate.setText(mCourse.getCourseEndDate());
@@ -173,19 +172,16 @@ public class CourseEditActivity extends AppCompatActivity {
         mCourse.setInstructorPhone(mInstructorPhone.getText().toString());
         mCourse.setInstructorEmail(mInstructorEmail.getText().toString());
         mCourse.setCourseNote(mOptionalNote.getText().toString());
-        mCourse.setTerm(mTermId);
-
-        Intent intent;
 
         if (mCourseId == -1) {
-            mStudentDb.courseDao().insertCourse(mCourse);
-            intent = new Intent(this, CourseListAdapter.class);
-
+            mCourse.setTerm(mTermId);
+            mCourseId = mStudentDb.courseDao().insertCourse(mCourse);
         }
         else {
             mStudentDb.courseDao().updateCourse(mCourse);
-            intent = new Intent(this, CourseListAdapter.class);
         }
+
+        Intent intent = new Intent(this, CourseListAdapter.class);
         setResult(RESULT_OK, intent);
         finish();
     }

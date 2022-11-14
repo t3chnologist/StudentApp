@@ -136,7 +136,7 @@ public class TermListAdapter extends AppCompatActivity {
         public void bind(Term term, int position) {
             mTerm = term;
             mTermId = mTerm.getId();
-            mTextView.setText(term.getTermTitle());
+            mTextView.setText("Term: " + term.getTermTitle());
 
             if (mSelectedTermPosition == position) {
                 mTextView.setBackgroundColor(Color.BLUE);
@@ -150,7 +150,7 @@ public class TermListAdapter extends AppCompatActivity {
         public void onClick(View view) {
             Intent intent = new Intent(TermListAdapter.this, TermDetailsActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putLong("termId", mTerm.getId());
+            bundle.putLong("termId", mTermId);
             intent.putExtras(bundle);
             startActivity(intent);
         }

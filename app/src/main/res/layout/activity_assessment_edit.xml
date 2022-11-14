@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".UIController.AssessmentEditActivity">
+
+
+        <TextView
+            android:id="@+id/titleLabelAssessment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:text="Assessment:"
+            android:textAlignment="viewStart"
+            android:textColor="#8C8514"
+            android:textSize="25sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/assessmentTitleEdit"
+            android:layout_width="350dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/course_text_rounded"
+            android:hint="Assessment title"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleLabelAssessment" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Enter title"
+            android:textColor="#8C8514"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/assessmentTitleEdit"
+            app:layout_constraintStart_toStartOf="@+id/assessmentTitleEdit"
+            app:layout_constraintTop_toTopOf="@+id/assessmentTitleEdit"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/assessmentEndDateEdit"
+            android:layout_width="350dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/course_text_rounded"
+            android:hint="Tap to select end date"
+            android:maxLines="1"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/assessmentStartDateEdit" />
+
+        <TextView
+            android:id="@+id/textViewAssessment"
+            android:layout_width="49dp"
+            android:layout_height="31dp"
+            android:layout_marginStart="4dp"
+            android:text="Select end date"
+            android:textColor="#8C8514"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/assessmentEndDateEdit"
+            app:layout_constraintStart_toStartOf="@+id/assessmentEndDateEdit"
+            app:layout_constraintTop_toTopOf="@+id/assessmentEndDateEdit"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/assessmentStartDateEdit"
+            android:layout_width="350dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/course_text_rounded"
+            android:hint="Tap to select start date"
+            android:maxLines="1"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/assessmentTitleEdit" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="57dp"
+            android:layout_height="31dp"
+            android:layout_marginStart="4dp"
+            android:text="Select start date"
+            android:textColor="#8C8514"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/assessmentStartDateEdit"
+            app:layout_constraintStart_toStartOf="@+id/assessmentStartDateEdit"
+            app:layout_constraintTop_toTopOf="@+id/assessmentStartDateEdit"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+        <TextView
+            android:id="@+id/typeAssessment"
+            android:layout_width="350dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/course_text_rounded"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/assessmentEndDateEdit" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="37dp"
+            android:layout_height="31dp"
+            android:layout_marginStart="4dp"
+            android:text="Select type"
+            android:textColor="#8C8514"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/typeAssessment"
+            app:layout_constraintStart_toStartOf="@+id/typeAssessment"
+            app:layout_constraintTop_toTopOf="@+id/typeAssessment"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingSaveAssessmentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/assessment_text_rounded"
+            android:clickable="true"
+            android:onClick="onSaveAssessmentButtonClick"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.954"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/save" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/typeAssessment"
+            app:layout_constraintEnd_toEndOf="@+id/typeAssessment"
+            app:layout_constraintTop_toTopOf="@+id/typeAssessment">
+
+            <RadioButton
+                android:id="@+id/performanceAssessmentEditRB"
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:checked="true"
+                android:text="Performance assessment" />
+
+            <RadioButton
+                android:id="@+id/objectiveAssessmentEditRB"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:text="Objective assessment" />
+
+        </RadioGroup>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

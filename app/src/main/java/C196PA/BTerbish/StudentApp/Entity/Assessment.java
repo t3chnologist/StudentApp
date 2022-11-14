@@ -13,9 +13,6 @@ public class Assessment {
     @ColumnInfo(name = "id")
     private long mId;
 
-    @ColumnInfo(name = "assessmentType")
-    private String mAssessmentType;
-
     @ColumnInfo(name = "assessmentTitle")
     private String mAssessmentTitle;
 
@@ -25,8 +22,11 @@ public class Assessment {
     @ColumnInfo(name = "assessmentEnd")
     private String mAssessmentEnd;
 
+    @ColumnInfo(name = "assessmentType")
+    private String mAssessmentType;
+
     @ColumnInfo(name = "course")
-    private String mCourse;
+    private long mCourse;
 
     public long getId() {
         return mId;
@@ -34,14 +34,6 @@ public class Assessment {
 
     public void setId(long mId) {
         this.mId = mId;
-    }
-
-    public String getAssessmentType() {
-        return mAssessmentType;
-    }
-
-    public void setAssessmentType(String mAssessmentType) {
-        this.mAssessmentType = mAssessmentType;
     }
 
     public String getAssessmentTitle() {
@@ -68,11 +60,31 @@ public class Assessment {
         this.mAssessmentEnd = mAssessmentEnd;
     }
 
-    public String getCourse() {
+    public String getAssessmentType() {
+        return mAssessmentType;
+    }
+
+    public void setAssessmentType(String mAssessmentType) {
+        this.mAssessmentType = mAssessmentType;
+    }
+
+    public long getCourse() {
         return mCourse;
     }
 
-    public void setCourse(String mCourse) {
+    public void setCourse(long mCourse) {
         this.mCourse = mCourse;
+    }
+
+    @Override
+    public String toString() {
+        return "Assessment{" +
+                "mId=" + mId +
+                ", mAssessmentTitle='" + mAssessmentTitle + '\'' +
+                ", mAssessmentStart='" + mAssessmentStart + '\'' +
+                ", mAssessmentEnd='" + mAssessmentEnd + '\'' +
+                ", mAssessmentType='" + mAssessmentType + '\'' +
+                ", mCourse=" + mCourse +
+                '}';
     }
 }

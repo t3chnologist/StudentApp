@@ -38,7 +38,6 @@ public class CourseListAdapter extends AppCompatActivity {
     private List<Course> mCourseList;
     private long mTermId;
     private String mTermTitle;
-    private TextView mCustomNoCourseMessage;
     private long courseId;
 
     @Override
@@ -49,11 +48,9 @@ public class CourseListAdapter extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         mTermId = bundle.getLong("termId");
 
-        mCustomNoCourseMessage = findViewById(R.id.noCourseMessage);
         mStudentDb = StudentDatabase.getInstance(getApplicationContext());
         mNoCourseLayout = findViewById(R.id.noCourseLayout);
         mShowCoursesLayout = findViewById(R.id.showCoursesLayout);
-
         mCourseList = mStudentDb.courseDao().getCoursesByTermId(mTermId);
         mTermTitle = mStudentDb.termDao().getTermById(mTermId).getTermTitle();
         mCourseColors = getResources().getIntArray(R.array.courseColors);

@@ -1,112 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UIController.TermEditActivity">
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".UIController.TermEditActivity">
 
 
-    <TextView
-        android:id="@+id/termTitleLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Term title:"
-        android:textAlignment="viewStart"
-        android:textColor="#01579B"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.072"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/termTitleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Term title:"
+            android:textAlignment="viewStart"
+            android:textColor="#01579B"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.072"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/termTitleText"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/term_text_rounded"
-        android:hint="Enter term title"
-        android:inputType="text"
-        android:maxLines="1"
-        android:textAlignment="center"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termTitleLabel" />
+        <EditText
+            android:id="@+id/termTitleText"
+            android:layout_width="320dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/term_text_rounded"
+            android:hint="Enter term title"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/termTitleLabel" />
 
-    <TextView
-        android:id="@+id/startDateLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Select start date:"
-        android:textAlignment="viewStart"
-        android:textColor="#01579B"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.072"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/termTitleText" />
+        <TextView
+            android:id="@+id/startDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Select start date:"
+            android:textAlignment="viewStart"
+            android:textColor="#01579B"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.072"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/termTitleText" />
 
-    <TextView
-        android:id="@+id/startDateText"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/term_text_rounded"
-        android:ems="10"
-        android:hint="Tap here to select date"
-        android:textAlignment="center"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startDateLabel" />
+        <TextView
+            android:id="@+id/startDateText"
+            android:layout_width="320dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/term_text_rounded"
+            android:ems="10"
+            android:hint="Tap here to select date"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/startDateLabel" />
 
-    <TextView
-        android:id="@+id/endDateLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Select end date:"
-        android:textAlignment="viewStart"
-        android:textColor="#01579B"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.072"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startDateText" />
+        <TextView
+            android:id="@+id/endDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Select end date:"
+            android:textAlignment="viewStart"
+            android:textColor="#01579B"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.072"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/startDateText" />
 
-    <TextView
-        android:id="@+id/endDateText"
-        android:layout_width="320dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/term_text_rounded"
-        android:ems="10"
-        android:hint="Tap here to select date"
-        android:textAlignment="center"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDateLabel" />
+        <TextView
+            android:id="@+id/endDateText"
+            android:layout_width="320dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/term_text_rounded"
+            android:ems="10"
+            android:hint="Tap here to select date"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/endDateLabel" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/FloatingSaveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:onClick="onSaveButtonClick"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.954"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/save" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/FloatingSaveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:onClick="onSaveButtonClick"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.954"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/save" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

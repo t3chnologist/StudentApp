@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -123,16 +124,6 @@ public class CourseDetailsActivity extends AppCompatActivity {
                     });
                     snackbar.setDuration(6000);
                     snackbar.show();
-
-                    /*
-                    new AlertDialog.Builder(this)
-                            .setTitle("Nothing to share")
-                            .setMessage("Note is empty.\n" +
-                                    "Add a note first.")
-                            .setPositiveButton("OK", null)
-                            .show();
-
-                     */
                 }
                 else {
                     String textBody = mCourseTitle.getText() + " course note:\n\n" + noteString;
@@ -162,5 +153,14 @@ public class CourseDetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CourseEditActivity.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_UPDATE_COURSE);
+    }
+
+    public void onAddAssessmentButtonClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("assessmentId", -1);
+        bundle.putLong("courseId", mCourseId);
+        Intent intent = new Intent(this, AssessmentEditActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

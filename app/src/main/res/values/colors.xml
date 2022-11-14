@@ -32,4 +32,12 @@
         <item>#F3BCCF</item>
     </array>
 
+    <array name="assessmentColors">
+        <item>#313CAF</item>
+        <item>#083E45</item>
+        <item>#1A6C1D</item>
+        <item>#915C12</item>
+        <item>#974125</item>
+    </array>
+
 </resources>

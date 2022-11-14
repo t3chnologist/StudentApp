@@ -13,6 +13,21 @@
         android:theme="@style/Theme.StudentApp"
         tools:targetApi="31">
         <activity
+            android:name=".UIController.AssessmentDetailsActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".UIController.AssessmentEditActivity"
+            android:label="Edit New Assessment"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".UIController.AssessmentListAdapter"
             android:exported="false">
             <meta-data
