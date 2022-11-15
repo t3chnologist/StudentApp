@@ -20,7 +20,7 @@ public interface AssessmentDao {
     @Query("SELECT * FROM assessmentTable WHERE course = :courseId")
     List<Assessment> getAssessmentsByCourseId(long courseId);
 
-    @Query("SELECT * FROM assessmentTable WHERE course = :assessmentId")
+    @Query("SELECT * FROM assessmentTable WHERE id = :assessmentId")
     Assessment getAssessmentById(long assessmentId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

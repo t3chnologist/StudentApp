@@ -4,25 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.Objects;
-
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Assessment;
-import C196PA.BTerbish.StudentApp.Entity.Course;
 import C196PA.BTerbish.StudentApp.R;
 
 public class AssessmentDetailsActivity extends AppCompatActivity {
@@ -46,9 +36,9 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Bundle bundle = getIntent().getExtras();
-        mAssessmentId = bundle.getLong("assessmentId");
-        mCourseId = bundle.getLong("courseId");
+        Bundle extras = getIntent().getExtras();
+        mAssessmentId = extras.getLong("assessmentId");
+        mCourseId = extras.getLong("courseId");
 
         mStudentDb = StudentDatabase.getInstance(getApplicationContext());
 
