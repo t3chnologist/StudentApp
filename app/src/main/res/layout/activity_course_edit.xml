@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         tools:context=".UIController.CourseEditActivity">
 
+
         <EditText
             android:id="@+id/courseTitleText"
             android:layout_width="350dp"
@@ -38,6 +39,7 @@
             android:background="@drawable/course_text_rounded"
             android:hint="Tap to select start date"
             android:maxLines="1"
+            android:onClick="onClickStartDate"
             android:textAlignment="center"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/courseEndText"
@@ -55,6 +57,7 @@
             android:background="@drawable/course_text_rounded"
             android:hint="Tap to select end date"
             android:maxLines="1"
+            android:onClick="onClickEndDate"
             android:textAlignment="center"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/statusSpinner"
@@ -161,22 +164,20 @@
             app:layout_constraintTop_toBottomOf="@+id/titleLabel3"
             app:layout_constraintVertical_bias="0.5" />
 
-    <!-- Labels start here -->
+        <!-- Labels start here -->
+
         <TextView
             android:id="@+id/titleLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Course info:"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:text="Course:"
             android:textAlignment="viewStart"
             android:textColor="#37813A"
             android:textSize="25sp"
-            app:layout_constraintBottom_toTopOf="@+id/courseTitleText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.057"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintTop_toBottomOf="@+id/termDateRange" />
 
         <TextView
             android:id="@+id/textView"
@@ -203,6 +204,17 @@
             app:layout_constraintStart_toStartOf="@+id/courseStartText"
             app:layout_constraintTop_toTopOf="@+id/courseStartText"
             app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/termDateRange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:textColor="#01579B"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView10"
@@ -290,7 +302,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Optional note"
+            android:text="Optional"
             android:textAlignment="viewStart"
             android:textColor="#37813A"
             android:textSize="25sp"

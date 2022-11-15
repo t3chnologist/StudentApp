@@ -1,5 +1,7 @@
 package C196PA.BTerbish.StudentApp.UIController;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +44,10 @@ public class TermListAdapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acvitity_term_list_adapter);
 
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         mStudentDb = StudentDatabase.getInstance(getApplicationContext());
         mTermColors = getResources().getIntArray(R.array.termColors);
         mRecyclerView = findViewById(R.id.termRecyclerView);
@@ -57,6 +63,7 @@ public class TermListAdapter extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+
         mTermList = mStudentDb.termDao().getTerms();
         if (mTermList.size() == 0) {
             displayTerm(false);
@@ -71,9 +78,9 @@ public class TermListAdapter extends AppCompatActivity {
         if (bundle != null && bundle.getBoolean("deleteTerm")) {
             getIntent().removeExtra("deleteTerm");
             mTermId = bundle.getLong("termId");
-            mSelectedTerm = mStudentDb.termDao().getTermById(mTermId);
-            deleteTerm(mSelectedTerm);
+            deleteTerm(mStudentDb.termDao().getTermById(mTermId));
         }
+
     }
 
     private void displayTerm(boolean display) {
@@ -136,7 +143,8 @@ public class TermListAdapter extends AppCompatActivity {
         public void bind(Term term, int position) {
             mTerm = term;
             mTermId = mTerm.getId();
-            mTextView.setText("Term: " + term.getTermTitle());
+            int courseCount = mStudentDb.courseDao().getCoursesByTermId(mTermId).size();
+            mTextView.setText("Term: " + term.getTermTitle() + "\n\n(Course count: " + courseCount + ")");
 
             if (mSelectedTermPosition == position) {
                 mTextView.setBackgroundColor(Color.BLUE);
@@ -283,5 +291,16 @@ public class TermListAdapter extends AppCompatActivity {
         }
         snackbar.setDuration(6000);
         snackbar.show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(this, HomeScreenActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

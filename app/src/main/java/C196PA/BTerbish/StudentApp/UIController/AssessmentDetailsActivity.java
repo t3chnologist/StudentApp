@@ -34,10 +34,8 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
     private TextView mAssessmentTitle;
     private TextView mStartDate;
     private TextView mEndDate;
-    private RadioGroup mAssessmentType;
+    private TextView mAssessmentType;
     private Assessment mAssessment;
-    private RadioButton mPerformanceAssessmentRB;
-    private RadioButton mObjectiveAssessmentRB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,35 +49,28 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         mAssessmentId = bundle.getLong("assessmentId");
         mCourseId = bundle.getLong("courseId");
+
         mStudentDb = StudentDatabase.getInstance(getApplicationContext());
 
         mAssessmentTitle = findViewById(R.id.assessmentTitleDetails);
         mStartDate = findViewById(R.id.assessmentStartDateDetails);
         mEndDate = findViewById(R.id.assessmentEndDateDetails);
-        mAssessmentType = findViewById(R.id.assessmentTypeRBGroup);
-        mPerformanceAssessmentRB = findViewById(R.id.radioButtonPA);
-        mObjectiveAssessmentRB = findViewById(R.id.radioButtonOA);
+        mAssessmentType = findViewById(R.id.typeAssessmentDetails);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
         mAssessment = mStudentDb.assessmentDao().getAssessmentById(mAssessmentId);
 
-        String assessmentTitle =mAssessment.getAssessmentTitle();
+        String assessmentTitle = mAssessment.getAssessmentTitle();
         setTitle("\"" + assessmentTitle + "\" details");
 
         mAssessmentTitle.setText(assessmentTitle);
         mStartDate.setText(mAssessment.getAssessmentStart());
         mEndDate.setText(mAssessment.getAssessmentEnd());
-
-        if (mAssessment.getAssessmentType() == mPerformanceAssessmentRB.getText()) {
-            mPerformanceAssessmentRB.setChecked(true);
-        }
-        else {
-            mObjectiveAssessmentRB.setChecked(true);
-        }
+        mAssessmentType.setText(mAssessment.getAssessmentType());
 
     }
 
@@ -135,5 +126,4 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_UPDATE_ASSESSMENT);
     }
-
 }

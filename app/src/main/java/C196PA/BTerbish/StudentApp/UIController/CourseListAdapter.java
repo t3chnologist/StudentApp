@@ -1,5 +1,7 @@
 package C196PA.BTerbish.StudentApp.UIController;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Calendar;
 import java.util.List;
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Course;
@@ -45,9 +49,12 @@ public class CourseListAdapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list_adapter);
 
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         Bundle bundle = getIntent().getExtras();
         mTermId = bundle.getLong("termId");
-
         mStudentDb = StudentDatabase.getInstance(getApplicationContext());
         mNoCourseLayout = findViewById(R.id.noCourseLayout);
         mShowCoursesLayout = findViewById(R.id.showCoursesLayout);
@@ -136,7 +143,9 @@ public class CourseListAdapter extends AppCompatActivity {
         public void bind(Course course, int position) {
             mCourse = course;
             courseId = mCourse.getId();
-            mTextView.setText(course.getCourseTitle());
+            int assessmentCount = mStudentDb.assessmentDao().getAssessmentsByCourseId(courseId).size();
+            mTextView.setText("Course: " + course.getCourseTitle() + "\n\n(Asmt count: " +
+                    assessmentCount + ")");
 
             if (mSelectedCoursePosition == position) {
                 mTextView.setBackgroundColor(Color.BLUE);
@@ -173,10 +182,10 @@ public class CourseListAdapter extends AppCompatActivity {
         }
     }
     public void onCourseAddClick(View view) {
+        Intent intent = new Intent(CourseListAdapter.this, CourseEditActivity.class);
         Bundle bundle = new Bundle();
         bundle.putLong("courseId", -1);
         bundle.putLong("termId", mTermId);
-        Intent intent = new Intent(CourseListAdapter.this, CourseEditActivity.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_NEW_COURSE);
     }
@@ -210,7 +219,7 @@ public class CourseListAdapter extends AppCompatActivity {
                     bundle.putLong("courseId", mSelectedCourse.getId());
                     Intent intent = new Intent(CourseListAdapter.this, CourseEditActivity.class);
                     intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_CODE_DELETE_COURSE);
+                    startActivityForResult(intent, REQUEST_CODE_UPDATE_COURSE);
                 default:
                     return false;
             }
@@ -233,8 +242,18 @@ public class CourseListAdapter extends AppCompatActivity {
         else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_COURSE) {
             Toast.makeText(this, "Course updated", Toast.LENGTH_SHORT).show();
         }
-        else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_DELETE_COURSE) {
-            Toast.makeText(this, "Course deleted", Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(this, TermDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong("termId", mTermId);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

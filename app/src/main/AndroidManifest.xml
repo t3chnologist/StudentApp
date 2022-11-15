@@ -54,8 +54,7 @@
         <activity
             android:name=".UIController.CourseListAdapter"
             android:exported="false"
-            android:label="Course List"
-            android:parentActivityName=".UIController.TermListAdapter">
+            android:label="Course List">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -63,8 +62,7 @@
         <activity
             android:name=".UIController.TermDetailsActivity"
             android:exported="false"
-            android:label="Term Details"
-            android:parentActivityName=".UIController.TermListAdapter">
+            android:label="Term Details">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -82,7 +80,6 @@
             android:name=".UIController.TermEditActivity"
             android:exported="false"
             android:label="Edit Term"
-            android:parentActivityName=".UIController.TermListAdapter"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.app.lib_name"

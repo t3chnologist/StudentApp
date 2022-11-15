@@ -20,6 +20,7 @@ import C196PA.BTerbish.StudentApp.R;
 public class TermDetailsActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE_UPDATE_TERM = 1;
+    private final int REQUEST_CODE_NEW_COURSE = 2;
     private long mTermId;
     private Term mTerm;
     StudentDatabase mStudentDb;
@@ -27,7 +28,7 @@ public class TermDetailsActivity extends AppCompatActivity {
     private TextView mStartDateDetail;
     private TextView mEndDateDetail;
     private Button showCourseButton;
-    private Button addCourseButton;
+    private int courseCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,32 +48,34 @@ public class TermDetailsActivity extends AppCompatActivity {
         mTermId = bundle.getLong("termId");
 
         showCourseButton = findViewById(R.id.showCourseButtonId);
-        addCourseButton = findViewById(R.id.addCourseButtonId);
 
-        refresh();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        refresh();
-    }
-
-    public void refresh() {
         mTerm = mStudentDb.termDao().getTermById(mTermId);
-        String termTitle = mTerm.getTermTitle();
-        setTitle("\"" + termTitle + "\" details");
-        mTermTitleDetail.setText(termTitle);
-        mStartDateDetail.setText(mTerm.getStartDate());
-        mEndDateDetail.setText(mTerm.getEndDate());
-
-        if (mStudentDb.courseDao().getCoursesByTermId(mTermId).size() > 0) {
-            showCourseButton.setVisibility(View.VISIBLE);
+        if (mTerm == null) {
+            Intent intent = new Intent(this, TermListAdapter.class);
+            startActivity(intent);
         }
         else {
-            showCourseButton.setVisibility(View.GONE);
-        }
+            String termTitle = mTerm.getTermTitle();
+            setTitle("\"" + termTitle + "\" details");
+            mTermTitleDetail.setText(termTitle);
+            mStartDateDetail.setText(mTerm.getStartDate());
+            mEndDateDetail.setText(mTerm.getEndDate());
 
+            courseCount = mStudentDb.courseDao().getCoursesByTermId(mTermId).size();
+
+            if (courseCount > 0) {
+                showCourseButton.setVisibility(View.VISIBLE);
+                showCourseButton.setText("SHOW COURSES (" + courseCount + ")");
+            }
+            else {
+                showCourseButton.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -84,13 +87,15 @@ public class TermDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            
             case android.R.id.home:
-                this.finish();
+                Intent intent = new Intent(this, TermListAdapter.class);
+                startActivity(intent);
                 return true;
             case R.id.edit:
                 Bundle bundle = new Bundle();
                 bundle.putLong("termId", mTermId);
-                Intent intent = new Intent(this, TermEditActivity.class);
+                intent = new Intent(this, TermEditActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_CODE_UPDATE_TERM);
                 return true;
@@ -138,11 +143,11 @@ public class TermDetailsActivity extends AppCompatActivity {
             });
             snackbar.show();
         }
-        else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_TERM) {
+        else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_NEW_COURSE) {
 
             Snackbar snackbar = Snackbar.make(findViewById(R.id.termDetailsCoordinatorLayout),
-                    "Term updated", Snackbar.LENGTH_LONG);
-            snackbar.setAction("Update course", (v) -> {
+                    "Course added", Snackbar.LENGTH_LONG);
+            snackbar.setAction("See course list", (v) -> {
                 showAssociatedCourses();
             });
             snackbar.setDuration(6000);
@@ -156,7 +161,7 @@ public class TermDetailsActivity extends AppCompatActivity {
         bundle.putLong("termId", mTermId);
         Intent intent = new Intent(this, CourseEditActivity.class);
         intent.putExtras(bundle);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_NEW_COURSE);
     }
 
     public void onShowCourseButtonClick(View view) {

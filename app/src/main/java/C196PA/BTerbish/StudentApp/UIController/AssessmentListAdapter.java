@@ -1,5 +1,7 @@
 package C196PA.BTerbish.StudentApp.UIController;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,6 +46,10 @@ public class AssessmentListAdapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assessment_list_adapter);
 
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         Bundle bundle = getIntent().getExtras();
         mCourseId = bundle.getLong("courseId");
 
@@ -55,10 +61,12 @@ public class AssessmentListAdapter extends AppCompatActivity {
         mAssessmentColors = getResources().getIntArray(R.array.assessmentColors);
         mRecyclerView = findViewById(R.id.assessmentRecyclerView);
         RecyclerView.LayoutManager gridLayoutManager =
-                new GridLayoutManager(getApplicationContext(), 3);
+                new GridLayoutManager(getApplicationContext(), 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
         setTitle(mCourseTitle + ": Assessment list");
+
+
     }
 
     @Override
@@ -149,11 +157,10 @@ public class AssessmentListAdapter extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Bundle bundle = new Bundle();
-            bundle.putLong("assessmentId", mAssessment.getId());
+            bundle.putLong("assessmentId", assessmentId);
             bundle.putLong("courseId", mCourseId);
 
-            Intent intent = new Intent(AssessmentListAdapter.this,
-                                        AssessmentDetailsActivity.class);
+            Intent intent = new Intent(AssessmentListAdapter.this, AssessmentDetailsActivity.class);
             intent.putExtras(bundle);
             startActivity(intent);
         }
@@ -238,5 +245,20 @@ public class AssessmentListAdapter extends AppCompatActivity {
         else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_DELETE_ASSESSMENT) {
             Toast.makeText(this, "Assessment deleted", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(this, CourseDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong("courseId", mCourseId);
+                bundle.putLong("termId", mStudentDb.courseDao().getCourseById(mCourseId).getTerm());
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

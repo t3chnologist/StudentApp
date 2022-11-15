@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
     private TextView mInstructorEmail;
     private TextView mOptionalNote;
     private Course mCourse;
+    private Button showAssessmentsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +60,16 @@ public class CourseDetailsActivity extends AppCompatActivity {
         mInstructorPhone = findViewById(R.id.instructorPhoneView);
         mInstructorEmail = findViewById(R.id.instructorEmailView);
         mOptionalNote = findViewById(R.id.courseNoteView);
+        showAssessmentsButton = findViewById(R.id.showAssessmentsButtonCourseDetails);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mCourse = mStudentDb.courseDao().getCourseById(mCourseId);
-        String courseTitle =mCourse.getCourseTitle();
+
+
+        String courseTitle = mCourse.getCourseTitle();
         setTitle("\"" + courseTitle + "\" details");
         mCourseTitle.setText(courseTitle);
         mStartDate.setText(mCourse.getCourseStartDate());
@@ -74,6 +79,14 @@ public class CourseDetailsActivity extends AppCompatActivity {
         mInstructorPhone.setText(mCourse.getInstructorPhone());
         mInstructorEmail.setText(mCourse.getInstructorEmail());
         mOptionalNote.setText(mCourse.getCourseNote());
+
+        if (mStudentDb.assessmentDao().getAssessmentsByCourseId(mCourseId).size() > 0) {
+            showAssessmentsButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            showAssessmentsButton.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -160,6 +173,14 @@ public class CourseDetailsActivity extends AppCompatActivity {
         bundle.putLong("assessmentId", -1);
         bundle.putLong("courseId", mCourseId);
         Intent intent = new Intent(this, AssessmentEditActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    public void onShowAssessmentButtonClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putLong("courseId", mCourseId);
+        Intent intent = new Intent(this, AssessmentListAdapter.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }

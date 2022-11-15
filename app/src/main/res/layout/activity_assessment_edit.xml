@@ -14,17 +14,28 @@
 
 
         <TextView
+            android:id="@+id/courseDateRange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:textColor="#37813A"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/titleLabelAssessment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:text="Assessment:"
             android:textAlignment="viewStart"
             android:textColor="#8C8514"
             android:textSize="25sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/courseDateRange" />
 
         <EditText
             android:id="@+id/assessmentTitleEdit"
@@ -63,6 +74,7 @@
             android:background="@drawable/course_text_rounded"
             android:hint="Tap to select end date"
             android:maxLines="1"
+            android:onClick="onClickEndDate"
             android:textAlignment="center"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +103,7 @@
             android:background="@drawable/course_text_rounded"
             android:hint="Tap to select start date"
             android:maxLines="1"
+            android:onClick="onClickStartDate"
             android:textAlignment="center"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
