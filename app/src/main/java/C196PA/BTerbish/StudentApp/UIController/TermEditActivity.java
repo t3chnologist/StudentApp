@@ -19,6 +19,8 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Term;
@@ -109,46 +111,26 @@ public class TermEditActivity extends AppCompatActivity{
 
     private void saveTerm() throws ParseException {
 
-        //check for missing input
-        boolean noMissingInput = Stream.of(mTermTitle.getText().toString(),
-                                            mStartDate.getText().toString(),
-                                            mEndDate.getText().toString())
-                                    .noneMatch(String::isEmpty);
+        if (inputValidated()) {
+            mTerm.setTermTitle(mTermTitle.getText().toString());
+            mTerm.setStartDate(mStartDate.getText().toString());
+            mTerm.setEndDate(mEndDate.getText().toString());
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
 
-        if (noMissingInput) {
-
-            Calendar startDate = converter(mStartDate.getText().toString());
-            Calendar endDate = converter(mEndDate.getText().toString());
-
-            //check start & end dates
-            if (endDate.before(startDate)) {
-                Toast.makeText(this, "Invalid start/end date", Toast.LENGTH_SHORT).show();
+            if (mTermId == -1) {
+                long newTermId = mStudentDb.termDao().insertTerm(mTerm);
+                bundle.putLong("termId", newTermId);
+                intent.putExtras(bundle);
             }
             else {
-                mTerm.setTermTitle(mTermTitle.getText().toString());
-                mTerm.setStartDate(mStartDate.getText().toString());
-                mTerm.setEndDate(mEndDate.getText().toString());
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-
-                if (mTermId == -1) {
-                    long newTermId = mStudentDb.termDao().insertTerm(mTerm);
-                    bundle.putLong("termId", newTermId);
-                    intent.putExtras(bundle);
-                }
-                else {
-                    mStudentDb.termDao().updateTerm(mTerm);
-                    bundle.putLong("termId", mTerm.getId());
-                    intent = new Intent(this, TermListAdapter.class);
-                    intent.putExtras(bundle);
-                }
-                setResult(RESULT_OK, intent);
-                finish();
+                mStudentDb.termDao().updateTerm(mTerm);
+                bundle.putLong("termId", mTerm.getId());
+                intent = new Intent(this, TermListAdapter.class);
+                intent.putExtras(bundle);
             }
-        }
-        else {
-            Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
-
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
@@ -157,6 +139,7 @@ public class TermEditActivity extends AppCompatActivity{
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mStartDate.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
+                mStartDate.setError(null);
             }
         }, year, month, day);
         datePickerDialog.show();
@@ -167,6 +150,7 @@ public class TermEditActivity extends AppCompatActivity{
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mEndDate.setText((monthOfYear + 1) +  "/" + dayOfMonth + "/" + year);
+                mEndDate.setError(null);
             }
         }, year, month, day);
         datePickerDialog.show();
@@ -182,5 +166,62 @@ public class TermEditActivity extends AppCompatActivity{
     public void minimizeKeyboard(View view) {
         InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public boolean inputValidated() throws ParseException {
+        //check for missing input
+        boolean noMissingInput = Stream.of(mTermTitle.getText().toString(),
+                                            mStartDate.getText().toString(),
+                                            mEndDate.getText().toString())
+                                    .noneMatch(String::isEmpty);
+
+        if (noMissingInput) {
+
+            mTermTitle.setError(null);
+            mStartDate.setError(null);
+            mEndDate.setError(null);
+
+            String termTitle = mTermTitle.getText().toString();
+            Calendar tempStartDate = converter(mStartDate.getText().toString());
+            Calendar tempEndDate = converter(mEndDate.getText().toString());
+
+            for (Term term : mStudentDb.termDao().getTerms()) {
+
+                //check for duplicate term title
+                String otherTitle = term.getTermTitle();
+                if ((mTermId != term.getId()) && (Objects.equals(termTitle, otherTitle))) {
+                    mTermTitle.setError("Duplicate term title");
+                    Toast.makeText(this, mTermTitle.getError(), Toast.LENGTH_SHORT).show();
+                }
+
+                //check for start & end date overlap
+                Calendar otherStartDate = converter(term.getStartDate().toString());
+                Calendar otherEndDate = converter(term.getEndDate().toString());
+                if ((tempStartDate.after(otherStartDate) && tempStartDate.before(otherEndDate)) ||
+                        (tempEndDate.after(otherStartDate) && tempEndDate.before(otherEndDate))) {
+                    mStartDate.setError("Invalid start/end");
+                    mEndDate.setError("Invalid start/end");
+                    Toast.makeText(this, "Dates overlap with " + term.getTermTitle(),
+                                    Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            //check start & end dates
+            if (tempEndDate.before(tempStartDate)) {
+                mStartDate.setError("Invalid start/end");
+                mEndDate.setError("Invalid start/end");
+                Toast.makeText(this, mStartDate.getError(), Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            if (mTermTitle.getText().toString().isEmpty()) {mTermTitle.setError("Title is required");}
+            if (mStartDate.getText().toString().isEmpty()) {mStartDate.setError("Missing start");}
+            if (mEndDate.getText().toString().isEmpty()) {mEndDate.setError("Missing end");}
+        }
+
+
+        //returns true if no error
+        return Stream.of(mTermTitle.getError(), mStartDate.getError(), mEndDate.getError())
+                    .allMatch(Objects::isNull);
     }
 }

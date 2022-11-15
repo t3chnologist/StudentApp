@@ -156,9 +156,10 @@ public class TermListAdapter extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+
             Intent intent = new Intent(TermListAdapter.this, TermDetailsActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putLong("termId", mTermId);
+            bundle.putLong("termId", mTerm.getId());
             intent.putExtras(bundle);
             startActivity(intent);
         }

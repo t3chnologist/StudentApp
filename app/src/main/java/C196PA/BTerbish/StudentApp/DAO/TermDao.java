@@ -17,6 +17,9 @@ public interface TermDao {
     @Query("SELECT * FROM termsTable WHERE id = :termId")
     Term getTermById(long termId);
 
+    @Query("SELECT termTitle FROM termsTable")
+    List<String> getAllTermTitles();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertTerm(Term term);
 

@@ -98,7 +98,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         mStudentDb.assessmentDao().deleteAssessment(mAssessment);
                         Bundle bundle = new Bundle();
-                        bundle.putLong("courseId", mAssessmentId);
+                        bundle.putLong("courseId", mCourseId);
                         Intent intent = new Intent(AssessmentDetailsActivity.this,
                                 AssessmentListAdapter.class);
                         intent.putExtras(bundle);
