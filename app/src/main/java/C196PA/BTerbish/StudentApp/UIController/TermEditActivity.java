@@ -105,6 +105,7 @@ public class TermEditActivity extends AppCompatActivity{
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -140,6 +141,7 @@ public class TermEditActivity extends AppCompatActivity{
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mStartDate.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
                 mStartDate.setError(null);
+                mEndDate.setError(null);
             }
         }, year, month, day);
         datePickerDialog.show();
@@ -150,6 +152,7 @@ public class TermEditActivity extends AppCompatActivity{
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mEndDate.setText((monthOfYear + 1) +  "/" + dayOfMonth + "/" + year);
+                mStartDate.setError(null);
                 mEndDate.setError(null);
             }
         }, year, month, day);
@@ -217,6 +220,7 @@ public class TermEditActivity extends AppCompatActivity{
             if (mTermTitle.getText().toString().isEmpty()) {mTermTitle.setError("Title is required");}
             if (mStartDate.getText().toString().isEmpty()) {mStartDate.setError("Missing start");}
             if (mEndDate.getText().toString().isEmpty()) {mEndDate.setError("Missing end");}
+            Toast.makeText(this, "Missing field", Toast.LENGTH_SHORT).show();
         }
 
 

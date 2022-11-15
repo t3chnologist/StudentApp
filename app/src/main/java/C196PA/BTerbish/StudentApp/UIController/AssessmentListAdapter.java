@@ -17,6 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Assessment;
@@ -82,6 +85,14 @@ public class AssessmentListAdapter extends AppCompatActivity {
         mAssessmentAdapter = new AssessmentListAdapter.AssessmentAdapter(mStudentDb.assessmentDao()
                                                         .getAssessmentsByCourseId(mCourseId));
         mRecyclerView.setAdapter(mAssessmentAdapter);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.getBoolean("deleteAssessment")) {
+            getIntent().removeExtra("deleteAssessment");
+            assessmentId = bundle.getLong("assessmentId");
+            getIntent().removeExtra("assessmentId");
+            deleteAssessment(mStudentDb.assessmentDao().getAssessmentById(assessmentId));
+        }
     }
 
     private void displayAssessment(boolean display) {
@@ -157,7 +168,7 @@ public class AssessmentListAdapter extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Bundle bundle = new Bundle();
-            bundle.putLong("assessmentId", assessmentId);
+            bundle.putLong("assessmentId", mAssessment.getId());
             bundle.putLong("courseId", mCourseId);
 
             Intent intent = new Intent(AssessmentListAdapter.this, AssessmentDetailsActivity.class);
@@ -207,19 +218,17 @@ public class AssessmentListAdapter extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.delete:
                     mode.finish();
-                    mStudentDb.assessmentDao().deleteAssessment(mSelectedAssessment);
-                    mAssessmentAdapter.removeAssessment(mSelectedAssessment);
-                    Toast.makeText(AssessmentListAdapter.this, "Assessment deleted",
-                            Toast.LENGTH_SHORT).show();
+                    deleteAssessment(mSelectedAssessment);
                     return true;
                 case R.id.edit:
                     mode.finish();
                     Bundle bundle = new Bundle();
                     bundle.putLong("assessmentId", mSelectedAssessment.getId());
+                    bundle.putLong("courseId", mCourseId);
                     Intent intent = new Intent(AssessmentListAdapter.this,
                                                 AssessmentEditActivity.class);
                     intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_CODE_DELETE_ASSESSMENT);
+                    startActivityForResult(intent, REQUEST_CODE_UPDATE_ASSESSMENT);
                 default:
                     return false;
             }
@@ -260,5 +269,22 @@ public class AssessmentListAdapter extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void deleteAssessment(Assessment selectedAssessment) {
+        Assessment deletedAssessment = selectedAssessment;
+        mStudentDb.assessmentDao().deleteAssessment(selectedAssessment);
+        mAssessmentAdapter.removeAssessment(selectedAssessment);
+        onResume();
+
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.assessmentCoordinatorLayout),
+                "Assessment deleted", Snackbar.LENGTH_SHORT);
+        snackbar.setAction("Undo", (v) -> {
+            mStudentDb.assessmentDao().insertAssessment(deletedAssessment);
+            mAssessmentList.add(deletedAssessment);
+            onResume();
+        });
+        snackbar.setDuration(6000);
+        snackbar.show();
     }
 }

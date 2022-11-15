@@ -2,10 +2,12 @@ package C196PA.BTerbish.StudentApp.UIController;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Calendar;
 import java.util.List;
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Course;
@@ -42,7 +43,7 @@ public class CourseListAdapter extends AppCompatActivity {
     private List<Course> mCourseList;
     private long mTermId;
     private String mTermTitle;
-    private long courseId;
+    private long mCourseId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,14 @@ public class CourseListAdapter extends AppCompatActivity {
         }
         mCourseAdapter = new CourseListAdapter.CourseAdapter(mStudentDb.courseDao().getCoursesByTermId(mTermId));
         mRecyclerView.setAdapter(mCourseAdapter);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.getBoolean("deleteCourse")) {
+            getIntent().removeExtra("deleteCourse");
+            mCourseId = bundle.getLong("courseId");
+            getIntent().removeExtra("courseId");
+            deleteCourse(mStudentDb.courseDao().getCourseById(mCourseId));
+        }
     }
 
     private void displayCourse(boolean display) {
@@ -142,10 +151,8 @@ public class CourseListAdapter extends AppCompatActivity {
 
         public void bind(Course course, int position) {
             mCourse = course;
-            courseId = mCourse.getId();
-            int assessmentCount = mStudentDb.assessmentDao().getAssessmentsByCourseId(courseId).size();
-            mTextView.setText("Course: " + course.getCourseTitle() + "\n\n(Asmt count: " +
-                    assessmentCount + ")");
+            mCourseId = mCourse.getId();
+            mTextView.setText("Course: " + course.getCourseTitle());
 
             if (mSelectedCoursePosition == position) {
                 mTextView.setBackgroundColor(Color.BLUE);
@@ -208,15 +215,23 @@ public class CourseListAdapter extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.delete:
                     mode.finish();
-                    mStudentDb.courseDao().deleteCourse(mSelectedCourse);
-                    mCourseAdapter.removeCourse(mSelectedCourse);
-                    Toast.makeText(CourseListAdapter.this, "Course deleted",
-                            Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(CourseListAdapter.this)
+                            .setTitle("Course: " + mSelectedCourse.getCourseTitle())
+                            .setMessage("Are you sure you want to delete this course?" +
+                                    "\nAny associated assessments will be removed automatically.")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    deleteCourse(mSelectedCourse);
+                                }})
+                            .setNegativeButton("No", null).show();
                     return true;
+
                 case R.id.edit:
                     mode.finish();
                     Bundle bundle = new Bundle();
                     bundle.putLong("courseId", mSelectedCourse.getId());
+                    bundle.putLong("termId", mTermId);
+                    bundle.putBoolean("addNote", false);
                     Intent intent = new Intent(CourseListAdapter.this, CourseEditActivity.class);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, REQUEST_CODE_UPDATE_COURSE);
@@ -255,5 +270,12 @@ public class CourseListAdapter extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void deleteCourse(Course selectedCourse) {
+        mStudentDb.courseDao().deleteCourse(selectedCourse);
+        mCourseAdapter.removeCourse(selectedCourse);
+        onResume();
+        Toast.makeText(this, "Course deleted", Toast.LENGTH_SHORT).show();
     }
 }

@@ -19,10 +19,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Assessment;
@@ -47,6 +50,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
     private int day;
     private DatePickerDialog datePickerDialog;
     private Course mCourse;
+    private String courseName;
     private String courseRange;
 
     @Override
@@ -70,13 +74,15 @@ public class AssessmentEditActivity extends AppCompatActivity {
         mAssessmentId = bundle.getLong("assessmentId");
         mCourseId = bundle.getLong("courseId");
 
+
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
         mCourse = mStudentDb.courseDao().getCourseById(mCourseId);
-        courseRange = mCourse.getCourseTitle() + " (" + mCourse.getCourseStartDate()
-                                        + " - " + mCourse.getCourseEndDate() + ")";
+        courseName = mCourse.getCourseTitle();
+        courseRange = courseName + " (" + mCourse.getCourseStartDate() + " - "
+                                        + mCourse.getCourseEndDate() + ")";
         courseDateRange.setText(courseRange);
 
         if(mAssessmentId == -1) {
@@ -115,43 +121,50 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.save:
-                saveAssessment();
+                try {
+                    saveAssessment();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void onSaveAssessmentButtonClick(View view) {
+    public void onSaveAssessmentButtonClick(View view) throws ParseException {
+        minimizeKeyboard(view);
         saveAssessment();
     }
 
-    public void saveAssessment() {
-        mAssessment.setAssessmentTitle(mAssessmentTitle.getText().toString());
-        mAssessment.setAssessmentStart(mStartDate.getText().toString());
-        mAssessment.setAssessmentEnd(mEndDate.getText().toString());
+    public void saveAssessment() throws ParseException {
 
+        if (inputValidated()) {
+            mAssessment.setAssessmentTitle(mAssessmentTitle.getText().toString());
+            mAssessment.setAssessmentStart(mStartDate.getText().toString());
+            mAssessment.setAssessmentEnd(mEndDate.getText().toString());
 
-        if (mPerformanceAssessmentRB.isChecked()) {
-            mAssessment.setAssessmentType(mPerformanceAssessmentRB.getText().toString());
-        }
-        else {
-            mAssessment.setAssessmentType(mObjectiveAssessmentRB.getText().toString());
-        }
+            if (mPerformanceAssessmentRB.isChecked()) {
+                mAssessment.setAssessmentType(mPerformanceAssessmentRB.getText().toString());
+            }
+            else {
+                mAssessment.setAssessmentType(mObjectiveAssessmentRB.getText().toString());
+            }
 
-        if (mAssessmentId == -1) {
-            mAssessment.setCourse(mCourseId);
-            mAssessmentId = mStudentDb.assessmentDao().insertAssessment(mAssessment);
-        }
-        else {
-            mStudentDb.assessmentDao().updateAssessment(mAssessment);
-        }
+            if (mAssessmentId == -1) {
+                mAssessment.setCourse(mCourseId);
+                mAssessmentId = mStudentDb.assessmentDao().insertAssessment(mAssessment);
+            }
+            else {
+                mStudentDb.assessmentDao().updateAssessment(mAssessment);
+            }
 
-        Intent intent = new Intent(this, AssessmentListAdapter.class);
-        Bundle bundle = new Bundle();
-        bundle.putLong("courseId", mCourseId);
-        intent.putExtras(bundle);
-        setResult(RESULT_OK, intent);
-        startActivity(intent);
+            Intent intent = new Intent(this, AssessmentListAdapter.class);
+            Bundle bundle = new Bundle();
+            bundle.putLong("courseId", mCourseId);
+            intent.putExtras(bundle);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     public void onClickStartDate(View view) {
@@ -159,6 +172,8 @@ public class AssessmentEditActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mStartDate.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
+                mStartDate.setError(null);
+                mEndDate.setError(null);
             }
         }, year, month, day);
         datePickerDialog.show();
@@ -169,6 +184,8 @@ public class AssessmentEditActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mEndDate.setText((monthOfYear + 1) +  "/" + dayOfMonth + "/" + year);
+                mStartDate.setError(null);
+                mEndDate.setError(null);
             }
         }, year, month, day);
         datePickerDialog.show();
@@ -185,4 +202,72 @@ public class AssessmentEditActivity extends AppCompatActivity {
         InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
+    public boolean inputValidated() throws ParseException {
+
+        boolean noMissingInput = Stream.of(mAssessmentTitle.getText().toString(),
+                                    mStartDate.getText().toString(), mEndDate.getText().toString())
+                                .noneMatch(String::isEmpty);
+        if (noMissingInput) {
+            mAssessmentTitle.setError(null);
+            mStartDate.setError(null);
+            mEndDate.setError(null);
+
+            //check for duplicate course title
+            String assessmentTitle = mAssessmentTitle.getText().toString();
+            for (Assessment assessment : mStudentDb.assessmentDao().getAssessments()) {
+                String otherAssessmentTitle = assessment.getAssessmentTitle();
+
+                if (mAssessmentId != assessment.getId() &&
+                        Objects.equals(assessmentTitle, otherAssessmentTitle)) {
+                    mAssessmentTitle.setError("Duplicate assessment title");
+                    Toast.makeText(this, mAssessmentTitle.getError(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            //check start & end dates
+            Course tempCourse = mStudentDb.courseDao().getCourseById(mCourseId);
+            Calendar courseStart = converter(tempCourse.getCourseStartDate());
+            Calendar courseEnd = converter(tempCourse.getCourseEndDate());
+            Calendar assessmentStart = converter(mStartDate.getText().toString());
+            Calendar assessmentEnd = converter(mEndDate.getText().toString());
+
+
+            if (assessmentEnd.before(assessmentStart)) {
+                mStartDate.setError("Invalid start/end");
+                mEndDate.setError("Invalid start/end");
+                Toast.makeText(this, "Invalid start/end date", Toast.LENGTH_SHORT).show();
+            }
+
+            if (assessmentStart.before(courseStart) || assessmentStart.after(courseEnd)) {
+                mStartDate.setError("Invalid start date");
+
+                Toast.makeText(this, "Start date is outside of course "
+                                        + courseName + " dates", Toast.LENGTH_SHORT).show();
+            }
+
+            if (assessmentEnd.before(courseStart) || assessmentEnd.after(courseEnd)) {
+                mEndDate.setError("Invalid start/end");
+                Toast.makeText(this, "End date is outside of course "
+                                        + courseName + " dates", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            if (mAssessmentTitle.getText().toString().isEmpty()) {
+                mAssessmentTitle.setError("Title is required");
+            }
+            if (mStartDate.getText().toString().isEmpty()) {
+                mStartDate.setError("Missing start date");
+            }
+            if (mEndDate.getText().toString().isEmpty()) {
+                mEndDate.setError("Missing end date");
+            }
+            Toast.makeText(this, "Missing field!", Toast.LENGTH_SHORT).show();
+        }
+
+        //returns true if no error
+        return Stream.of(mAssessmentTitle.getError(), mStartDate.getError(), mEndDate.getError())
+                .allMatch(Objects::isNull);
+    }
+
 }

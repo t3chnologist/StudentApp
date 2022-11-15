@@ -6,11 +6,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.util.BuddhistCalendar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Assessment;
 import C196PA.BTerbish.StudentApp.R;
@@ -89,22 +92,22 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_ASSESSMENT) {
+            Toast.makeText(this, "Assessment updated", Toast.LENGTH_SHORT).show();
+        }
+    }
     public void deleteAssessment() {
-        new AlertDialog.Builder(this)
-                .setTitle("Assessment: " + mAssessmentTitle.getText())
-                .setMessage("Are you sure you want to delete this assessment?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        mStudentDb.assessmentDao().deleteAssessment(mAssessment);
-                        Bundle bundle = new Bundle();
-                        bundle.putLong("courseId", mCourseId);
-                        Intent intent = new Intent(AssessmentDetailsActivity.this,
-                                AssessmentListAdapter.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }})
-                .setNegativeButton("No", null).show();
+        Bundle bundle = new Bundle();
+        bundle.putLong("courseId", mCourseId);
+        bundle.putLong("assessmentId", mAssessmentId);
+        bundle.putBoolean("deleteAssessment", true);
+        Intent intent = new Intent(this, AssessmentListAdapter.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     public void editAssessment(long assessmentId, long courseId) {

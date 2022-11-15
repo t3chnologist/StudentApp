@@ -17,6 +17,9 @@ public interface CourseDao {
     @Query("SELECT * FROM coursesTable WHERE term = :termId")
     List<Course> getCoursesByTermId(long termId);
 
+    @Query("SELECT courseTitle FROM coursesTable")
+    List<String> getAllCourseTitles();
+
     @Query("SELECT * FROM coursesTable WHERE id = :courseId")
     Course getCourseById(long courseId);
 

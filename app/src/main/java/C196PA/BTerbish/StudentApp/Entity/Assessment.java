@@ -1,12 +1,14 @@
 package C196PA.BTerbish.StudentApp.Entity;
 
+import static androidx.room.ForeignKey.CASCADE;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "assessmentTable",
-        foreignKeys = @ForeignKey(entity = Course.class,
+        foreignKeys = @ForeignKey(onDelete = CASCADE, entity = Course.class,
         parentColumns = "id", childColumns = "course"))
 public class Assessment {
     @PrimaryKey(autoGenerate = true)

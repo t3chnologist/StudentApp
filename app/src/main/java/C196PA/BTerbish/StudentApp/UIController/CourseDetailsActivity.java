@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.util.BuddhistCalendar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +25,7 @@ import C196PA.BTerbish.StudentApp.R;
 public class CourseDetailsActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE_UPDATE_COURSE = 1;
+    private final int REQUEST_CODE_NEW_ASSESSMENT = 2;
     private long mCourseId;
     private long mTermId;
     StudentDatabase mStudentDb;
@@ -79,6 +81,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
         mInstructorPhone.setText(mCourse.getInstructorPhone());
         mInstructorEmail.setText(mCourse.getInstructorEmail());
         mOptionalNote.setText(mCourse.getCourseNote());
+        mOptionalNote.setError(null);
 
         if (mStudentDb.assessmentDao().getAssessmentsByCourseId(mCourseId).size() > 0) {
             showAssessmentsButton.setVisibility(View.VISIBLE);
@@ -101,7 +104,11 @@ public class CourseDetailsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case android.R.id.home:
-                this.finish();
+                Intent intent = new Intent(this, CourseListAdapter.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong("termId", mTermId);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 return true;
 
             case R.id.edit:
@@ -111,16 +118,13 @@ public class CourseDetailsActivity extends AppCompatActivity {
             case R.id.delete:
                 new AlertDialog.Builder(this)
                         .setTitle("Course: " + mCourseTitle.getText())
-                        .setMessage("Are you sure you want to delete this course?")
+                        .setMessage("Are you sure you want to delete this course?" +
+                                "\n\nAny associated assessments will be removed automatically.")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                mStudentDb.courseDao().deleteCourse(mCourse);
-                                Bundle bundle = new Bundle();
-                                bundle.putLong("termId", mTermId);
-                                Intent intent = new Intent(CourseDetailsActivity.this,
-                                                            CourseListAdapter.class);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
+
+                                deleteCourse();
+
                             }})
                         .setNegativeButton("No", null).show();
                 return true;
@@ -130,6 +134,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 String noteString = mOptionalNote.getText().toString();
 
                 if (noteString.isEmpty()) {
+                    mOptionalNote.setError("Empty note");
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.courseDetailsCoordinatorLayout),
                             "Can't share empty note.", Snackbar.LENGTH_LONG);
                     snackbar.setAction("Add note", (v) -> {
@@ -153,8 +158,10 @@ public class CourseDetailsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_COURSE) {
-
             Toast.makeText(this, "Course updated", Toast.LENGTH_SHORT).show();
+        }
+        else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_NEW_ASSESSMENT) {
+            Toast.makeText(this, "Assessment added", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -174,13 +181,23 @@ public class CourseDetailsActivity extends AppCompatActivity {
         bundle.putLong("courseId", mCourseId);
         Intent intent = new Intent(this, AssessmentEditActivity.class);
         intent.putExtras(bundle);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_NEW_ASSESSMENT);
     }
 
     public void onShowAssessmentButtonClick(View view) {
         Bundle bundle = new Bundle();
         bundle.putLong("courseId", mCourseId);
         Intent intent = new Intent(this, AssessmentListAdapter.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    public void deleteCourse() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("termId", mTermId);
+        bundle.putLong("courseId", mCourseId);
+        bundle.putBoolean("deleteCourse", true);
+        Intent intent = new Intent(this, CourseListAdapter.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }

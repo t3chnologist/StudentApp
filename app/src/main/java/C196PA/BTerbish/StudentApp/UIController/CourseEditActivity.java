@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
@@ -93,7 +94,7 @@ public class CourseEditActivity extends AppCompatActivity {
         day = calendar.get(Calendar.DAY_OF_MONTH);
 
         mTerm = mStudentDb.termDao().getTermById(mTermId);
-        termRange = mTerm.getTermTitle() + " (" + mTerm.getStartDate() + " - " + mTerm.getEndDate() + ")";
+        termRange = mTerm.getTermTitle() + " date: " + mTerm.getStartDate() + " - " + mTerm.getEndDate();
         termDateRange.setText(termRange);
 
         if (mCourseId == -1) {
@@ -153,66 +154,32 @@ public class CourseEditActivity extends AppCompatActivity {
 
     public void saveCourse() throws ParseException {
 
-        boolean noMissingInput = Stream.of(mCourseTitle.getText().toString(),
-                                        mStartDate.getText().toString(),
-                                        mEndDate.getText().toString(),
-                                        mStatus.getSelectedItem().toString(),
-                                        mInstructorName.getText().toString(),
-                                        mInstructorPhone.getText().toString(),
-                                        mInstructorEmail.getText().toString())
-                                .noneMatch(String::isEmpty);
+        if (inputValidated()) {
+            mCourse.setCourseTitle(mCourseTitle.getText().toString());
+            mCourse.setCourseStartDate(mStartDate.getText().toString());
+            mCourse.setCourseEndDate(mEndDate.getText().toString());
+            mCourse.setCourseStatus(mStatus.getSelectedItem().toString());
+            mCourse.setInstructorName(mInstructorName.getText().toString());
+            mCourse.setInstructorPhone(mInstructorPhone.getText().toString());
+            mCourse.setInstructorEmail(mInstructorEmail.getText().toString());
+            mCourse.setCourseNote(mOptionalNote.getText().toString());
 
-        if (noMissingInput) {
+            Intent intent = new Intent(CourseEditActivity.this,
+                    CourseListAdapter.class);
+            Bundle bundle = new Bundle();
+            bundle.putLong("termId", mTermId);
+            intent.putExtras(bundle);
 
-            //check start & end dates
-            Calendar termStart = converter(mStudentDb.termDao().getTermById(mTermId).getStartDate());
-            Calendar termEnd = converter(mStudentDb.termDao().getTermById(mTermId).getEndDate());
-            Calendar courseStart = converter(mStartDate.getText().toString());
-            Calendar courseEnd = converter(mEndDate.getText().toString());
-
-            if (courseEnd.before(courseStart) || courseEnd.before(termStart) || courseEnd.after(termEnd) ||
-                                    courseStart.before(termStart) || courseStart.after(termEnd)) {
-
-                if (courseEnd.before(termStart) || courseEnd.after(termEnd) ||
-                        courseStart.before(termStart) || courseStart.after(termEnd)) {
-                    Toast.makeText(this, "Date(s) are out of Term date range",
-                                                        Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(this, "Invalid start/end date",
-                                                        Toast.LENGTH_SHORT).show();
-                }
+            if (mCourseId == -1) {
+                mCourse.setTerm(mTermId);
+                mCourseId = mStudentDb.courseDao().insertCourse(mCourse);
             }
             else {
-                mCourse.setCourseTitle(mCourseTitle.getText().toString());
-                mCourse.setCourseStartDate(mStartDate.getText().toString());
-                mCourse.setCourseEndDate(mEndDate.getText().toString());
-                mCourse.setCourseStatus(mStatus.getSelectedItem().toString());
-                mCourse.setInstructorName(mInstructorName.getText().toString());
-                mCourse.setInstructorPhone(mInstructorPhone.getText().toString());
-                mCourse.setInstructorEmail(mInstructorEmail.getText().toString());
-                mCourse.setCourseNote(mOptionalNote.getText().toString());
-
-                Intent intent = new Intent(CourseEditActivity.this,
-                                                    CourseListAdapter.class);
-                Bundle bundle = new Bundle();
-                bundle.putLong("termId", mTermId);
-                intent.putExtras(bundle);
-
-                if (mCourseId == -1) {
-                    mCourse.setTerm(mTermId);
-                    mCourseId = mStudentDb.courseDao().insertCourse(mCourse);
-                }
-                else {
-                    mStudentDb.courseDao().updateCourse(mCourse);
-                }
-
-                setResult(RESULT_OK, intent);
-                finish();
+                mStudentDb.courseDao().updateCourse(mCourse);
             }
-        }
-        else {
-            Toast.makeText(this, "Missing field!", Toast.LENGTH_SHORT).show();
+
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
@@ -221,6 +188,8 @@ public class CourseEditActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mStartDate.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year);
+                mStartDate.setError(null);
+                mEndDate.setError(null);
             }
         }, year, month, day);
         datePickerDialog.show();
@@ -231,6 +200,8 @@ public class CourseEditActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mEndDate.setText((monthOfYear + 1) +  "/" + dayOfMonth + "/" + year);
+                mStartDate.setError(null);
+                mEndDate.setError(null);
             }
         }, year, month, day);
         datePickerDialog.show();
@@ -246,5 +217,76 @@ public class CourseEditActivity extends AppCompatActivity {
     public void minimizeKeyboard(View view) {
         InputMethodManager imm =(InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public boolean inputValidated() throws ParseException {
+        //check for missing input
+        boolean noMissingInput = Stream.of(mCourseTitle.getText().toString(),
+                        mStartDate.getText().toString(),
+                        mEndDate.getText().toString(),
+                        mStatus.getSelectedItem().toString(),
+                        mInstructorName.getText().toString(),
+                        mInstructorPhone.getText().toString(),
+                        mInstructorEmail.getText().toString())
+                .noneMatch(String::isEmpty);
+
+        if (noMissingInput) {
+            mCourseTitle.setError(null);
+            mStartDate.setError(null);
+            mEndDate.setError(null);
+            mInstructorName.setError(null);
+            mInstructorPhone.setError(null);
+            mInstructorEmail.setError(null);
+
+            //check for duplicate course title
+            String courseTitle = mCourseTitle.getText().toString();
+            for (Course course : mStudentDb.courseDao().getCourses()) {
+                String otherCourseTitle = course.getCourseTitle();
+                if (mCourseId != course.getId() && Objects.equals(courseTitle, otherCourseTitle)) {
+                    mCourseTitle.setError("Duplicate course title");
+                    Toast.makeText(this, mCourseTitle.getError(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            //check start & end dates
+            Calendar termStart = converter(mStudentDb.termDao().getTermById(mTermId).getStartDate());
+            Calendar termEnd = converter(mStudentDb.termDao().getTermById(mTermId).getEndDate());
+            Calendar courseStart = converter(mStartDate.getText().toString());
+            Calendar courseEnd = converter(mEndDate.getText().toString());
+
+            if (courseEnd.before(courseStart)) {
+                mStartDate.setError("Invalid start/end");
+                mEndDate.setError("Invalid start/end");
+                Toast.makeText(this, "Invalid start/end date", Toast.LENGTH_SHORT).show();
+            }
+
+            if (courseStart.before(termStart) || courseStart.after(termEnd)) {
+                mStartDate.setError("Invalid start date");
+                Toast.makeText(this, "Start date is outside of Term dates",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            if (courseEnd.before(termStart) || courseEnd.after(termEnd)) {
+                mEndDate.setError("Invalid start/end");
+                Toast.makeText(this, "End date is outside of Term dates",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            if (mCourseTitle.getText().toString().isEmpty()) {mCourseTitle.setError("Title is required");}
+            if (mStartDate.getText().toString().isEmpty()) {mStartDate.setError("Missing start");}
+            if (mEndDate.getText().toString().isEmpty()) {mEndDate.setError("Missing end");}
+            if (mInstructorName.getText().toString().isEmpty()) {mInstructorName.setError("Missing name");}
+            if (mInstructorPhone.getText().toString().isEmpty()) {mInstructorPhone.setError("Missing phone");}
+            if (mInstructorEmail.getText().toString().isEmpty()) {mInstructorEmail.setError("Missing email");}
+
+            Toast.makeText(this, "Missing field!", Toast.LENGTH_SHORT).show();
+        }
+
+        //returns true if no error
+        return Stream.of(mCourseTitle.getError(), mStartDate.getError(),
+                        mEndDate.getError(), mInstructorName.getError(),
+                        mInstructorPhone.getError(), mInstructorEmail.getError())
+                .allMatch(Objects::isNull);
     }
 }
