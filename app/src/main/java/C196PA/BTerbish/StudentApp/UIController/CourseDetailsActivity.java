@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 import java.util.SimpleTimeZone;
 
@@ -170,10 +171,13 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 }
             case R.id.setAlert:
                 String courseTitle = mCourseTitle.getText().toString();
-                setNotification(mStartDate.getText().toString(),courseTitle + " starts today!");
-                setNotification(mEndDate.getText().toString(), courseTitle + " ends today!");
+                String start = mStartDate.getText().toString();
+                String end = mEndDate.getText().toString();
 
-                Toast.makeText(this, "Added notification", Toast.LENGTH_SHORT).show();
+                setNotification(start,courseTitle + " starts today");
+                setNotification(end, courseTitle + " ends today");
+
+                Toast.makeText(this, "Notification added", Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -228,7 +232,9 @@ public class CourseDetailsActivity extends AppCompatActivity {
     }
 
     public void setNotification (String date, String notificationText) {
+
         Date notificationDate = null;
+
         try {
             notificationDate = simpleDateFormat.parse(date);
 
@@ -249,5 +255,12 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 HomeScreenActivity.numAlert++, intent, FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, triggerStartDate, pendingIntent);
+    }
+
+    private Calendar converter(String date) throws ParseException {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        cal.setTime(sdf.parse(date));
+        return cal;
     }
 }

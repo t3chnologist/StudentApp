@@ -144,6 +144,7 @@ public class TermEditActivity extends AppCompatActivity{
                 mEndDate.setError(null);
             }
         }, year, month, day);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
 
@@ -156,6 +157,7 @@ public class TermEditActivity extends AppCompatActivity{
                 mEndDate.setError(null);
             }
         }, year, month, day);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
 

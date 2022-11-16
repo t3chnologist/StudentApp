@@ -176,6 +176,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 mEndDate.setError(null);
             }
         }, year, month, day);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
 
@@ -188,6 +189,7 @@ public class AssessmentEditActivity extends AppCompatActivity {
                 mEndDate.setError(null);
             }
         }, year, month, day);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
 
