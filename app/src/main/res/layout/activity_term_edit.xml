@@ -14,7 +14,7 @@
 
 
         <TextView
-            android:id="@+id/termTitleLabel"
+            android:id="@+id/termTitleLabelOnEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -41,10 +41,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/termTitleLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/termTitleLabelOnEdit" />
 
         <TextView
-            android:id="@+id/startDateLabel"
+            android:id="@+id/startDateLabelOnEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -71,10 +71,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/startDateLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/startDateLabelOnEdit" />
 
         <TextView
-            android:id="@+id/endDateLabel"
+            android:id="@+id/endDateLabelOnEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -101,7 +101,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/endDateLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/endDateLabelOnEdit" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/FloatingSaveButton"

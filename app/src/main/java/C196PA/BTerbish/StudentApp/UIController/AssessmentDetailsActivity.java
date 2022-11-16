@@ -1,18 +1,23 @@
 package C196PA.BTerbish.StudentApp.UIController;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import android.content.DialogInterface;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.icu.util.BuddhistCalendar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Assessment;
@@ -29,6 +34,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
     private TextView mEndDate;
     private TextView mAssessmentType;
     private Assessment mAssessment;
+    private SimpleDateFormat simpleDateFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,8 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
         Bundle extras = getIntent().getExtras();
         mAssessmentId = extras.getLong("assessmentId");
@@ -70,7 +78,7 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.context_menu, menu);
+        inflater.inflate(R.menu.assessment_details_menu, menu);
         return true;
     }
 
@@ -89,6 +97,16 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
             case R.id.delete:
                 deleteAssessment();
                 return true;
+            case R.id.setAlert:
+                String title = mAssessment.getAssessmentTitle();
+                String type = mAssessment.getAssessmentType();
+                String start = mAssessment.getAssessmentStart();
+                String end = mAssessment.getAssessmentEnd();
+
+                setNotification(start,title + " starts today!", type);
+                setNotification(end, title + " ends today!", type);
+
+                Toast.makeText(this, "Added notification", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -118,5 +136,32 @@ public class AssessmentDetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AssessmentEditActivity.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_UPDATE_ASSESSMENT);
+    }
+
+    public void setNotification (String date, String notificationText, String assessmentType) {
+
+
+
+        Date notificationDate = null;
+        try {
+            notificationDate = simpleDateFormat.parse(date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        assert notificationDate != null;
+        long triggerStartDate = notificationDate.getTime();
+
+        Intent intent = new Intent(this, MyReceiver.class);
+        Bundle bundleStart = new Bundle();
+        bundleStart.putString("text", notificationText);
+        bundleStart.putString("title", assessmentType + " reminder");
+        intent.putExtras(bundleStart);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+                HomeScreenActivity.numAlert++, intent, FLAG_IMMUTABLE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, triggerStartDate, pendingIntent);
     }
 }

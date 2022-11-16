@@ -23,7 +23,6 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -207,7 +206,7 @@ public class CourseEditActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private Calendar converter(String date) throws ParseException {
+    private Calendar dateConverter(String date) throws ParseException {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         cal.setTime(sdf.parse(date));
@@ -249,10 +248,10 @@ public class CourseEditActivity extends AppCompatActivity {
             }
 
             //check start & end dates
-            Calendar termStart = converter(mStudentDb.termDao().getTermById(mTermId).getStartDate());
-            Calendar termEnd = converter(mStudentDb.termDao().getTermById(mTermId).getEndDate());
-            Calendar courseStart = converter(mStartDate.getText().toString());
-            Calendar courseEnd = converter(mEndDate.getText().toString());
+            Calendar termStart = dateConverter(mStudentDb.termDao().getTermById(mTermId).getStartDate());
+            Calendar termEnd = dateConverter(mStudentDb.termDao().getTermById(mTermId).getEndDate());
+            Calendar courseStart = dateConverter(mStartDate.getText().toString());
+            Calendar courseEnd = dateConverter(mEndDate.getText().toString());
 
             if (courseEnd.before(courseStart)) {
                 mStartDate.setError("Invalid start/end");

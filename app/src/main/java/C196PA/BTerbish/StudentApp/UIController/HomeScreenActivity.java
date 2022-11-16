@@ -7,6 +7,7 @@ import android.view.View;
 import C196PA.BTerbish.StudentApp.R;
 
 public class HomeScreenActivity extends AppCompatActivity {
+    public static int numAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

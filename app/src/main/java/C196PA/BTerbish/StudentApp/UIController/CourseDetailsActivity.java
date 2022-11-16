@@ -1,9 +1,15 @@
 package C196PA.BTerbish.StudentApp.UIController;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.util.BuddhistCalendar;
@@ -17,6 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
+import java.util.SimpleTimeZone;
 
 import C196PA.BTerbish.StudentApp.Database.StudentDatabase;
 import C196PA.BTerbish.StudentApp.Entity.Course;
@@ -39,6 +53,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
     private TextView mOptionalNote;
     private Course mCourse;
     private Button showAssessmentsButton;
+    private SimpleDateFormat simpleDateFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +63,8 @@ public class CourseDetailsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
         Bundle bundle = getIntent().getExtras();
         mCourseId = bundle.getLong("courseId");
@@ -148,8 +165,16 @@ public class CourseDetailsActivity extends AppCompatActivity {
                     Intent intentShare = new Intent(Intent.ACTION_SEND);
                     intentShare.setType("text/plain");
                     intentShare.putExtra(Intent.EXTRA_TEXT, textBody);
+                    intentShare.createChooser(intentShare, null);
                     startActivity(intentShare);
                 }
+            case R.id.setAlert:
+                String courseTitle = mCourseTitle.getText().toString();
+                setNotification(mStartDate.getText().toString(),courseTitle + " starts today!");
+                setNotification(mEndDate.getText().toString(), courseTitle + " ends today!");
+
+                Toast.makeText(this, "Added notification", Toast.LENGTH_SHORT).show();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -200,5 +225,29 @@ public class CourseDetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CourseListAdapter.class);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    public void setNotification (String date, String notificationText) {
+        Date notificationDate = null;
+        try {
+            notificationDate = simpleDateFormat.parse(date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        assert notificationDate != null;
+        long triggerStartDate = notificationDate.getTime();
+
+        Intent intent = new Intent(this, MyReceiver.class);
+        Bundle bundleStart = new Bundle();
+        bundleStart.putString("text", notificationText);
+        bundleStart.putString("title", "Course reminder");
+        intent.putExtras(bundleStart);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+                HomeScreenActivity.numAlert++, intent, FLAG_IMMUTABLE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, triggerStartDate, pendingIntent);
     }
 }
