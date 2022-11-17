@@ -169,6 +169,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
                     intentShare.createChooser(intentShare, null);
                     startActivity(intentShare);
                 }
+                return true;
             case R.id.setAlert:
                 String courseTitle = mCourseTitle.getText().toString();
                 String start = mStartDate.getText().toString();

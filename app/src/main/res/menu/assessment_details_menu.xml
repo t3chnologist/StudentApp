@@ -14,12 +14,6 @@
         app:showAsAction="ifRoom">
     </item>
 
-    <item android:id="@+id/shareNote"
-        android:title="@string/share_note"
-        android:icon="@drawable/ic_baseline_share_24"
-        app:showAsAction="always">
-    </item>
-
     <item android:id="@+id/setAlert"
         android:title="@string/set_alert"
         android:icon="@drawable/ic_baseline_notifications_24"
