@@ -7,9 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.core.app.NotificationCompat;
-
 import C196PA.BTerbish.StudentApp.R;
 
 public class MyReceiver extends BroadcastReceiver {

@@ -6,11 +6,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
-
 import java.util.List;
-
 import C196PA.BTerbish.StudentApp.Entity.Assessment;
-import C196PA.BTerbish.StudentApp.Entity.Term;
 
 @Dao
 public interface AssessmentDao {
