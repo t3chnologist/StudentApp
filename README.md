@@ -1,4 +1,4 @@
-# StudentApp | Android - Mobile Application Development
+# StudentApp | Android (Java) - Mobile App Development
 
 ## Overview
 ### Basic Android application for students to add/track terms, add/track courses associated with given term, add/track assessments associated with given course.
